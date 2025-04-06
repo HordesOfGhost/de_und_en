@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Language Learning Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            padding-top: 60px;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .feature-card {
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        .feature-card:hover {
+            transform: scale(1.03);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="mb-5">Language Learning Hub</h1>
+
+        <div class="card-container">
+            <!-- Translation -->
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h5 class="card-title">Translation</h5>
+                    <p class="card-text">Translate between English and German.</p>
+                    <a href="/translate?direction=en_to_de" class="btn btn-primary">Start Translating</a>
+                </div>
+            </div>
+
+            <!-- Speech Recognition + Translation -->
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h5 class="card-title">Speech Translation</h5>
+                    <p class="card-text">Speak and get instant translation between English and German.</p>
+                    <a href="/speech-translate" class="btn btn-success">Speak Now</a>
+                </div>
+            </div>
+
+            <!-- Flashcards -->
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h5 class="card-title">Flashcards</h5>
+                    <p class="card-text">Practice vocabulary with smart flashcards.</p>
+                    <a href="/flashcards" class="btn btn-warning">Practice</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

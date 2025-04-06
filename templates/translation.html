@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        select, input[type="text"] {
+            padding: 8px;
+            margin: 10px 0;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Translation</h1>
+
+    <form action="/translate" method="post">
+        <label for="direction">Select translation direction:</label><br>
+        <select name="direction" id="direction">
+            <option value="en_to_de" {% if direction == "en_to_de" %}selected{% endif %}>English to German</option>
+            <option value="de_to_en" {% if direction == "de_to_en" %}selected{% endif %}>German to English</option>
+        </select>
+        <br>
+
+        <input type="text" name="input_text" placeholder="Enter your text" required>
+        <br>
+        <button type="submit">Translate</button>
+    </form>
+
+    {% if translated_text %}
+        <h2>{{ input_language }}</h2>
+        <p>{{ input_text}}</p>
+        <h2>{{ translated_language }}</h2>
+        <p>{{ translated_text }}</p>
+    {% endif %}
+
+    <a href="/">⬅ Back</a>
+</body>
+</html>
