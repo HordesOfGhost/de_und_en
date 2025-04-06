@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flashcards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .card {
+            display: inline-block;
+            padding: 40px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            margin: 20px;
+            width: 400px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+        }
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flashcard</h1>
+    <form method="get" action="/flashcard">
+        <label for="direction">Direction:</label>
+        <select name="direction" id="direction" onchange="this.form.submit()">
+            <option value="en_to_de" {% if direction == 'en_to_de' %}selected{% endif %}>English to German</option>
+            <option value="de_to_en" {% if direction == 'de_to_en' %}selected{% endif %}>German to English</option>
+        </select>
+    </form>
+
+    <div class="card">
+        {% if direction == 'en_to_de' %}
+            <h2>{{ card.english }}</h2>
+        {% else %}
+            <h2>{{ card.german }}</h2>
+        {% endif %}
+
+        <form id="answer-form">
+            <input type="text" id="user-answer" placeholder="Type your answer" autocomplete="off" required>
+            <button type="submit">Check</button>
+        </form>
+
+        <div class="feedback" id="feedback"></div>
+    <a href="/">⬅ Back</a>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('answer-form');
+        const input = document.getElementById('user-answer');
+        const feedback = document.getElementById('feedback');
+
+        const rawCorrectAnswer = "{{ card.german if direction == 'en_to_de' else card.english }}";
+
+        // Normalize text: lowercase, remove accents and special characters
+        function normalize(text) {
+            return text
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")  // remove accents
+                .replace(/[^\w\s]|_/g, "")        // remove punctuation/special chars
+                .replace(/\s+/g, " ")             // collapse multiple spaces
+                .trim();
+        }
+
+        const correctAnswer = normalize(rawCorrectAnswer);
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const userAnswer = normalize(input.value);
+
+            if (userAnswer === correctAnswer) {
+                feedback.textContent = "✅ Correct!";
+                feedback.style.color = "green";
+            } else {
+                feedback.textContent = `Incorrect : Correct answer: ${rawCorrectAnswer}`;
+                feedback.style.color = "red";
+            }
+        });
+
+    </script>
+</body>
+</html>

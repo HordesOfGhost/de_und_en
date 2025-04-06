@@ -7,7 +7,6 @@ from services.translation import translate_and_save
 from .config import templates
 import os
 
-
 router = APIRouter()
 
 # Handle POST request for transcription
