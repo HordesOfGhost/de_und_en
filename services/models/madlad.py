@@ -1,11 +1,9 @@
-import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from .config import device
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+madlad_tokenizer = AutoTokenizer.from_pretrained("google/madlad400-3b-mt")
 
-tokenizer = AutoTokenizer.from_pretrained("google/madlad400-3b-mt")
-
-model = AutoModelForSeq2SeqLM.from_pretrained(
+madlad_model = AutoModelForSeq2SeqLM.from_pretrained(
     "google/madlad400-3b-mt",
     device_map="auto",             
     load_in_4bit=True              

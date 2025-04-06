@@ -1,4 +1,4 @@
-from services.models import model, tokenizer, device
+from services.models import madlad_model, madlad_tokenizer, device
 from services.utils import split_sentences
 from sqlalchemy.orm import Session
 from services.db.schemas import TranslationModel
@@ -12,14 +12,14 @@ def convert_to_de(input_text):
     translated_sentences = " "
 
     for sentence in sentences:
-        inputs = tokenizer(f"<2de> {sentence}", return_tensors="pt")
+        inputs = madlad_tokenizer(f"<2de> {sentence}", return_tensors="pt")
         inputs = {k: v.to(device) for k, v in inputs.items()}
 
         # Generate output
-        outputs = model.generate(**inputs)
+        outputs = madlad_model.generate(**inputs)
 
         # Decode
-        decoded_sentence = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        decoded_sentence = madlad_tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
         translated_sentences += " " + decoded_sentence[0]
     
@@ -30,14 +30,14 @@ def convert_to_en(input_text):
     translated_sentences = " "
 
     for sentence in sentences:
-        inputs = tokenizer(f"<2en> {sentence}", return_tensors="pt")
+        inputs = madlad_tokenizer(f"<2en> {sentence}", return_tensors="pt")
         inputs = {k: v.to(device) for k, v in inputs.items()}
 
         # Generate output
-        outputs = model.generate(**inputs)
+        outputs = madlad_model.generate(**inputs)
 
         # Decode
-        decoded_sentence = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        decoded_sentence = madlad_tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
         translated_sentences += " " + decoded_sentence[0]
     

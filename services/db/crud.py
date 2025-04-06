@@ -8,4 +8,3 @@ def save_translation(db: Session, translation_data: TranslationModel):
     db.commit()
     db.refresh(translation)
     return translation
-

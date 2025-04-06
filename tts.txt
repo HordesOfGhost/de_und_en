@@ -1,3 +1,40 @@
 Bark
     
 
+
+The error you're seeing (`FileNotFoundError: [WinError 2]`) suggests that Whisper is attempting to use a program or tool (likely **FFmpeg**) to process the audio, but it can't find it in your system's `PATH`.
+
+### 🛠️ Solution: Install FFmpeg
+
+You need to install FFmpeg, which is required for audio processing in Whisper.
+
+#### Step 1: **Install FFmpeg on Windows**
+
+1. **Download FFmpeg**:  
+   Go to [FFmpeg official download page](https://ffmpeg.org/download.html) and download the Windows version (usually under "Windows builds from gyan.dev").
+
+2. **Extract the files**:
+   - Extract the downloaded ZIP file to a folder, e.g., `C:\ffmpeg`.
+
+3. **Add FFmpeg to System PATH**:
+   - Open **System Properties** (`Win + R`, then type `sysdm.cpl`).
+   - Go to the **Advanced** tab and click **Environment Variables**.
+   - Under **System variables**, find the **Path** variable and click **Edit**.
+   - Add the path to the `bin` folder of FFmpeg (e.g., `C:\ffmpeg\bin`).
+
+4. **Verify FFmpeg Installation**:
+   Open a new command prompt (`cmd`) and type:
+
+   ```bash
+   ffmpeg -version
+   ```
+
+   If installed correctly, it should show FFmpeg version details.
+
+---
+
+#### Step 2: **Restart your Python script**
+
+Once FFmpeg is installed and in your system's `PATH`, restart your Python script, and it should work without the `FileNotFoundError`.
+
+Let me know if you encounter any issues after this!

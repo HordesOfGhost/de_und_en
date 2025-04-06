@@ -2,11 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>English und Deutsch </title>
+    <title>English und Deutsch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
         body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             background-color: #f0f2f5;
+        }
+        main {
+            flex: 1;
             padding-top: 60px;
         }
         .card-container {
@@ -27,10 +37,24 @@
             font-size: 1.3rem;
             font-weight: bold;
         }
+        footer {
+            padding: 20px;
+            background-color: #e9ecef;
+            text-align: center;
+        }
+        #random-translation {
+            font-weight: bold;
+            font-size: 1.1rem;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <div class="container text-center">
+    <main class="container text-center">
         <h1 class="mb-5">English und Deutsch</h1>
 
         <div class="card-container">
@@ -43,12 +67,12 @@
                 </div>
             </div>
 
-            <!-- Speech Recognition + Translation -->
+            <!-- Speech Translation -->
             <div class="card feature-card">
                 <div class="card-body">
                     <h5 class="card-title">Speech Translation</h5>
                     <p class="card-text">Speak and get instant translation between English and German.</p>
-                    <a href="/speech-translate" class="btn btn-success">Speak Now</a>
+                    <a href="/transcribe" class="btn btn-success">Speak Now</a>
                 </div>
             </div>
 
@@ -61,6 +85,46 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer>
+        <p class="mb-1">Random Translation:</p>
+        <p id="random-translation">Loading...</p>
+    </footer>
+
+    <script>
+        let currentIndex = 0;
+        let translations = [];
+
+        async function fetchTranslations() {
+            try {
+                const response = await fetch('/random-translations');
+                translations = await response.json();
+                if (translations.length > 0) {
+                    updateTranslation();
+                    setInterval(updateTranslation, 10000);
+                } else {
+                    document.getElementById('random-translation').innerText = 'No translations found.';
+                }
+            } catch (error) {
+                console.error('Error fetching translations:', error);
+                document.getElementById('random-translation').innerText = 'Error loading translations.';
+            }
+        }
+
+        function updateTranslation() {
+            const entry = translations[currentIndex];
+            const text = `${entry.english} - ${entry.german}`;
+            const el = document.getElementById('random-translation');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerText = text;
+                el.style.opacity = 1;
+            }, 300);
+            currentIndex = (currentIndex + 1) % translations.length;
+        }
+
+        fetchTranslations();
+    </script>
 </body>
 </html>
