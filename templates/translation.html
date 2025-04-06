@@ -77,7 +77,6 @@
     </main>
 
     <footer>
-        <p class="mb-1">Random Translation:</p>
         <p id="random-translation">Loading...</p>
     </footer>
 
@@ -91,7 +90,7 @@
                 translations = await response.json();
                 if (translations.length > 0) {
                     updateTranslation();
-                    setInterval(updateTranslation, 10000);
+                    setInterval(updateTranslation, 5000);
                 } else {
                     document.getElementById('random-translation').innerText = 'No translations found.';
                 }

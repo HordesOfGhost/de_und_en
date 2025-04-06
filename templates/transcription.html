@@ -20,10 +20,7 @@
             padding: 40px;
             background-color: #f9f9f9;
         }
-        form {
-            margin-bottom: 20px;
-        }
-        select, input[type="text"], input[type="file"], button {
+        select, button {
             padding: 10px;
             margin: 15px 0;
             width: 100%;
@@ -40,6 +37,18 @@
         button:hover {
             background-color: #45a049;
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .result-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result-container h2 {
+            font-size: 1.4rem;
+        }
         footer {
             background-color: #f0f0f0;
             padding: 20px;
@@ -55,50 +64,42 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .button-container {
-            margin: 20px;
-        }
-        .button-container button {
-            width: auto;
-        }
-        .result-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .result-container h2 {
-            font-size: 1.4rem;
-        }
     </style>
 </head>
 <body>
     <main>
         <h1>Transcription</h1>
-        
         <div class="container">
-            <!-- Record Audio Button -->
+
+            <!-- Language Selection -->
             <div class="button-container">
-                <button id="recordButton">Start Recording</button>
-                <button id="stopButton" style="display:none;">Stop Recording</button>
+                <label for="languageSelect">Select Translation:</label>
+                <select id="languageSelect">
+                    <option value="en_to_de" {% if input_language == 'en' %}selected{% endif %}>English to German</option>
+                    <option value="de_to_en" {% if input_language == 'de' %}selected{% endif %}>German to English</option>
+                </select>
             </div>
 
-            <!-- Display Transcribed Text -->
+            <!-- Record Audio Button -->
+            <div class="button-container">
+                <button id="recordButton" onmousedown="startRecording()" onmouseup="stopRecording()" onmouseleave="stopRecording()">Hold to Record</button>
+            </div>
+
+            <!-- Transcribed Text Display -->
             <div class="result-container">
                 {% if transcribed_text %}
-                    <h2>Transcribed Text:</h2>
+                    <h2>{{ input_language }}</h2>
                     <p>{{ transcribed_text }}</p>
+                    <h2>{{ translated_language }}</h2>
+                    <p>{{ translated_text }}</p>
                 {% endif %}
             </div>
+
+            <a href="/">⬅ Back</a>
         </div>
     </main>
 
     <footer>
-        <p class="mb-1">Random Transcription:</p>
         <p id="random-translation">Loading...</p>
     </footer>
 
@@ -107,91 +108,78 @@
         let mediaRecorder;
         let audioChunks = [];
 
-        // Handle Recording Button Click
-        document.getElementById('recordButton').addEventListener('click', () => {
-            startRecording();
-        });
-
-        // Handle Stop Button Click
-        document.getElementById('stopButton').addEventListener('click', () => {
-            stopRecording();
-        });
-
+        // Start recording on hold
         async function startRecording() {
+            if (isRecording) return;
+
             try {
-                // Request microphone access
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
 
-                // Push audio data to the audioChunks array
-                mediaRecorder.ondataavailable = event => {
-                    audioChunks.push(event.data);
-                };
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-                // Stop recording and create the audio blob
                 mediaRecorder.onstop = async () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    const audio = new Audio(audioUrl);
-                    audio.play();
+                    const direction = document.getElementById('languageSelect').value;
 
-                    // Send audio file to backend (you can handle this using FormData)
                     const formData = new FormData();
                     formData.append('audio_file', audioBlob, 'audio.wav');
+                    formData.append('direction', direction);
 
-                    // Submit to the transcription endpoint
-                    await fetch('/transcribe', {
+                    const response = await fetch('/transcribe', {
                         method: 'POST',
-                        body: formData
+                        body: formData,
                     });
+
+                    if (response.redirected) {
+                        window.location.href = response.url; // In case you want redirection
+                    } else {
+                        const html = await response.text();
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    }
+
+                    audioChunks = [];
                 };
 
-                // Start recording
                 mediaRecorder.start();
-                document.getElementById('recordButton').style.display = 'none';
-                document.getElementById('stopButton').style.display = 'inline';
                 isRecording = true;
-            } catch (error) {
-                console.error('Error accessing microphone:', error);
+            } catch (err) {
+                console.error('Microphone access error:', err);
             }
         }
 
         function stopRecording() {
             if (isRecording && mediaRecorder) {
                 mediaRecorder.stop();
-                document.getElementById('recordButton').style.display = 'inline';
-                document.getElementById('stopButton').style.display = 'none';
                 isRecording = false;
             }
         }
 
-        // Fetch random translations
-        let currentIndex = 0;
-        let translations = [];
-
+        // Translation Carousel
+        let translations = [], currentIndex = 0;
         async function fetchTranslations() {
             try {
-                const response = await fetch('/random-translations');
-                translations = await response.json();
+                const res = await fetch('/random-translations');
+                translations = await res.json();
                 if (translations.length > 0) {
                     updateTranslation();
                     setInterval(updateTranslation, 10000);
                 } else {
                     document.getElementById('random-translation').innerText = 'No translations found.';
                 }
-            } catch (error) {
-                console.error('Error fetching translations:', error);
+            } catch (err) {
                 document.getElementById('random-translation').innerText = 'Error loading translations.';
             }
         }
 
         function updateTranslation() {
             const entry = translations[currentIndex];
-            const text = `${entry.english} - ${entry.german}`;
             const el = document.getElementById('random-translation');
             el.style.opacity = 0;
             setTimeout(() => {
-                el.innerText = text;
+                el.innerText = `${entry.english} - ${entry.german}`;
                 el.style.opacity = 1;
             }, 300);
             currentIndex = (currentIndex + 1) % translations.length;

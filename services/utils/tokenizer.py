@@ -5,7 +5,7 @@ from nltk import download
 def split_sentences(sentence):
 
     try:
-        find("tokenizer/punkt")
+        find("tokenizers/punkt")
     except:
         download('punkt')
 

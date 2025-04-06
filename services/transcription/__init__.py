@@ -1,1 +1,1 @@
-from .transcribe import transcribe_and_save
+from .transcribe import transcribe_audio
