@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,6 +16,20 @@ class Translation(Base):
     english = Column(String, nullable=False)
     german = Column(String, nullable=False)
 
+    __table_args__ = (
+        UniqueConstraint("english", "german", name="uq_english_german"),
+    )
+
+class Conversation(Base):
+    __tablename__ = "conversations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    english = Column(String, nullable=False)
+    german = Column(String, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("english", "german", name="uq_english_german"),
+    )
 
 def get_db():
     db = SessionLocal()

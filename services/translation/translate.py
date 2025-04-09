@@ -4,41 +4,29 @@ from sqlalchemy.orm import Session
 from services.db.schemas import TranslationModel
 from services.db.crud import save_translation
 
-
-def convert_to_de(input_text):
-
-    sentences = split_sentences(input_text)
-
-    translated_sentences = " "
-
-    for sentence in sentences:
-        inputs = madlad_tokenizer(f"<2de> {sentence}", return_tensors="pt")
-        inputs = {k: v.to(device) for k, v in inputs.items()}
-
-        # Generate output
-        outputs = madlad_model.generate(**inputs)
-
-        # Decode
-        decoded_sentence = madlad_tokenizer.batch_decode(outputs, skip_special_tokens=True)
-
-        translated_sentences += " " + decoded_sentence[0]
-    
-    return translated_sentences.strip()
-
-def convert_to_en(input_text):
+def translate_lng(input_text, target_language):
     sentences = split_sentences(input_text)
     translated_sentences = " "
 
     for sentence in sentences:
-        inputs = madlad_tokenizer(f"<2en> {sentence}", return_tensors="pt")
+        inputs = madlad_tokenizer(f"<{target_language}> {sentence}", 
+                    return_tensors="pt", 
+                    max_length=1024, 
+                    truncation=True, 
+                    padding="longest")
+        
         inputs = {k: v.to(device) for k, v in inputs.items()}
 
         # Generate output
-        outputs = madlad_model.generate(**inputs)
+        outputs = madlad_model.generate(**inputs,
+            max_length=1024,
+            num_beams=4,
+            early_stopping=True
+        )
 
         # Decode
         decoded_sentence = madlad_tokenizer.batch_decode(outputs, skip_special_tokens=True)
-
+        print(decoded_sentence)
         translated_sentences += " " + decoded_sentence[0]
     
     return translated_sentences.strip()
@@ -46,9 +34,9 @@ def convert_to_en(input_text):
 def translate_and_save(input_text: str, direction: str, db: Session):
 
     if direction == "en_to_de":
-        translated_text = convert_to_de(input_text)
+        translated_text = translate_lng(input_text, target_language = "2de")
     else:
-        translated_text = convert_to_en(input_text)
+        translated_text = translate_lng(input_text, target_language = "2en")
 
     translation_data = TranslationModel(
         english=input_text if direction == "en_to_de" else translated_text,
