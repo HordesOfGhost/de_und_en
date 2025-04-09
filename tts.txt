@@ -38,3 +38,6 @@ You need to install FFmpeg, which is required for audio processing in Whisper.
 Once FFmpeg is installed and in your system's `PATH`, restart your Python script, and it should work without the `FileNotFoundError`.
 
 Let me know if you encounter any issues after this!
+
+
+https://github.com/espeak-ng/espeak-ng/releases
