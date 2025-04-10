@@ -33,7 +33,7 @@ async def transcribe(
         "request": request,
         "input_language":"English" if direction == "en_to_de" else "German",
         "input_audio": audio_file.filename,
-        "transcribed_text": transcribed_text,
+        "input_text": transcribed_text,
         "translated_language": "German" if direction == "en_to_de" else "English",
         "translated_text":translated_text
     })

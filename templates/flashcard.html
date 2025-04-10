@@ -3,69 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <title>Flashcards</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background-color: #f9f9f9;
-            text-align: center;
-        }
-        .card {
-            display: inline-block;
-            padding: 40px;
-            border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            margin: 20px;
-            width: 400px;
-        }
-        input[type="text"] {
-            padding: 10px;
-            width: 80%;
-            margin-top: 20px;
-        }
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-        }
-        .feedback {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', path='flashcard.css') }}"> 
 </head>
 <body>
-    <h1>Flashcard</h1>
-    <form method="get" action="/flashcard">
-        <label for="direction">Direction:</label>
-        <select name="direction" id="direction" onchange="this.form.submit()">
-            <option value="en_to_de" {% if direction == 'en_to_de' %}selected{% endif %}>English to German</option>
-            <option value="de_to_en" {% if direction == 'de_to_en' %}selected{% endif %}>German to English</option>
-        </select>
-    </form>
-
-    <div class="card">
-        {% if direction == 'en_to_de' %}
-            <h2>{{ card.english }}</h2>
-        {% else %}
-            <h2>{{ card.german }}</h2>
-        {% endif %}
-
-        <form id="answer-form">
-            <input type="text" id="user-answer" placeholder="Type your answer" autocomplete="off" required>
-            <button type="submit">Check</button>
+    <div class="container">
+        <h1>Flashcard</h1>
+        <form method="get" action="/flashcard" class="direction-form">
+            <label for="direction">Direction:</label>
+            <select name="direction" id="direction" onchange="this.form.submit()">
+                <option value="en_to_de" {% if direction == 'en_to_de' %}selected{% endif %}>English to German</option>
+                <option value="de_to_en" {% if direction == 'de_to_en' %}selected{% endif %}>German to English</option>
+            </select>
         </form>
 
-        <div class="feedback" id="feedback"></div>
-    <a href="/">⬅ Back</a>
+        <div class="card">
+            {% if direction == 'en_to_de' %}
+                <h2>
+                    <span>{{ card.english }}</span>  
+                    <button 
+                        onclick="playSound('{{ card.english }}', 'English')" 
+                        title="Play Sound">
+                        🔊
+                    </button>
+                </h2>
+            {% else %}
+                <h2>
+                    <span>{{ card.german }}</span>
+                    <button 
+                        onclick="playSound('{{ card.german }}', 'German')" 
+                        title="Play Sound">
+                        🔊
+                    </button>
+                </h2>
+            {% endif %}
 
+            <form id="answer-form">
+                <input type="text" id="user-answer" placeholder="Type your answer" autocomplete="off" required>
+                <button type="submit">Check</button>
+            </form>
+
+            <!-- Clickable area on the right side of the card -->
+            <div class="right-click-area" onclick="goToNextCard()"></div>
+
+            <div class="feedback" id="feedback"></div>
+            <div id="play-answer-button-container" style="display:none;">
+                {% if direction == 'en_to_de' %}
+                    <button id="play-answer-button" onclick="playAnswerAudio('German')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
+                        🔊 Play Answer
+                    </button>
+                {% elif direction == 'de_to_en' %}
+                    <button id="play-answer-button" onclick="playAnswerAudio('English')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
+                        🔊 Play Answer
+                    </button>
+                {% endif %}
+            </div>
+            <a href="/" class="back-button">⬅ Back</a>
+        </div>
     </div>
 
     <script>
         const form = document.getElementById('answer-form');
         const input = document.getElementById('user-answer');
         const feedback = document.getElementById('feedback');
-
+        const playAnswerButtonContainer = document.getElementById('play-answer-button-container');
         const rawCorrectAnswer = "{{ card.german if direction == 'en_to_de' else card.english }}";
 
         // Normalize text: lowercase, remove accents and special characters
@@ -86,14 +87,57 @@
             const userAnswer = normalize(input.value);
 
             if (userAnswer === correctAnswer) {
-                feedback.textContent = "✅ Correct!";
+                feedback.textContent = `✅ ${rawCorrectAnswer}`;
                 feedback.style.color = "green";
             } else {
-                feedback.textContent = `Incorrect : Correct answer: ${rawCorrectAnswer}`;
+                feedback.textContent = `❌ ${rawCorrectAnswer}`;
                 feedback.style.color = "red";
             }
+
+            // Show the "Play Answer" button after checking
+            playAnswerButtonContainer.style.display = 'block';
         });
 
+        function goToNextCard() {
+            window.location.href = "/flashcard?direction={{ direction }}"; // Keep direction when navigating
+        }
+
+        function playSound(text, language) {
+            const langMap = {
+                "English": "en",
+                "German": "de"
+            };
+
+            const mappedLang = langMap[language] || language; 
+
+            const params = new URLSearchParams({ text, language: mappedLang });
+            fetch('/synthesize?' + params.toString(), {
+                method: 'POST',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert("Audio playback failed.");
+                }
+            });
+        }
+
+        function playAnswerAudio(language) {
+            const langMap = {
+                "English": "en",
+                "German": "de"
+            };
+            const mappedLang = langMap[language] || language; 
+
+            const params = new URLSearchParams({ text: correctAnswer, language: mappedLang });  
+            fetch('/synthesize?' + params.toString(), {
+                method: 'POST',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert("Audio playback failed.");
+                }
+            });
+        }
     </script>
 </body>
 </html>

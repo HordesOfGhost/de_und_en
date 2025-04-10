@@ -4,62 +4,7 @@
     <meta charset="UTF-8">
     <title>English und Deutsch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f0f2f5;
-        }
-        main {
-            flex: 1;
-            padding-top: 60px;
-        }
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            justify-items: center;
-        }
-        .feature-card {
-            width: 100%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
-        }
-        .feature-card:hover {
-            transform: scale(1.03);
-        }
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-        footer {
-            padding: 20px;
-            background-color: #e9ecef;
-            text-align: center;
-        }
-        #random-translation {
-            font-weight: bold;
-            font-size: 1.1rem;
-            animation: fadeIn 0.5s ease-in;
-        }
-        .english-word {
-            color: #efb514; /* Bootstrap primary blue */
-        }
-
-        .german-word {
-            color: #080505; /* Bootstrap danger red */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    <link href="{{ url_for('static', path='styles.css') }}" rel="stylesheet">
 </head>
 <body>
     <main class="container text-center">

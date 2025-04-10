@@ -3,75 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='transcription.css') }}">
     <title>Transcribe</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        main {
-            flex: 1;
-            padding: 40px;
-            background-color: #f9f9f9;
-        }
-        select, button {
-            padding: 10px;
-            margin: 15px 0;
-            width: 100%;
-            max-width: 300px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .result-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .result-container h2 {
-            font-size: 1.4rem;
-        }
-        footer {
-            background-color: #f0f0f0;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        #random-translation {
-            font-weight: bold;
-            font-size: 1.1rem;
-            animation: fadeIn 0.5s ease-in;
-        }
-        .english-word {
-            color: #efb514; /* Bootstrap primary blue */
-        }
-
-        .german-word {
-            color: #080505; /* Bootstrap danger red */
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
 </head>
 <body>
     <main>
@@ -87,22 +21,48 @@
                 </select>
             </div>
 
-            <!-- Record Audio Button -->
+            <!-- Record Button -->
             <div class="button-container">
-                <button id="recordButton" onmousedown="startRecording()" onmouseup="stopRecording()" onmouseleave="stopRecording()">Hold to Record</button>
+                <button id="recordButton"
+                    onmousedown="startRecording()"
+                    onmouseup="stopRecording()"
+                    onmouseleave="stopRecording()">
+                    Hold to Record
+                </button>
             </div>
 
-            <!-- Transcribed Text Display -->
-            <div class="result-container">
-                {% if transcribed_text %}
-                    <h2>{{ input_language }}</h2>
-                    <p>{{ transcribed_text }}</p>
-                    <h2>{{ translated_language }}</h2>
-                    <p>{{ translated_text }}</p>
-                {% endif %}
+            {% if translated_text %}
+            <div style="margin-bottom: 1em;">
+                <h2>{{ input_language }}</h2>
+                <p class="text-with-icon">
+                    <span>{{ input_text }}</span>
+                    <button 
+                        onclick="playSound('{{ input_text }}', '{{ input_language }}')" 
+                        style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
+                        title="Play Sound">
+                        🔊
+                    </button>
+                </p>
             </div>
 
-            <a href="/">⬅ Back</a>
+            <div>
+                <h2>{{ translated_language }}</h2>
+                <p class="text-with-icon">
+                    <span>{{ translated_text }}</span>
+                    <button 
+                        onclick="playSound('{{ translated_text }}', '{{ translated_language }}')" 
+                        style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
+                        title="Play Sound">
+                        🔊
+                    </button>
+                </p>
+            </div>
+            {% endif %}
+            
+            <div class="centered-link">
+                <a href="/">⬅ Back</a>
+            </div>            
+    
         </div>
     </main>
 
@@ -118,6 +78,9 @@
         // Start recording on hold
         async function startRecording() {
             if (isRecording) return;
+        
+            const button = document.getElementById('recordButton');
+            button.classList.add('recording'); // Add glow effect on hold
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -139,7 +102,7 @@
                     });
 
                     if (response.redirected) {
-                        window.location.href = response.url; // In case you want redirection
+                        window.location.href = response.url; // Handle redirection
                     } else {
                         const html = await response.text();
                         document.open();
@@ -147,7 +110,7 @@
                         document.close();
                     }
 
-                    audioChunks = [];
+                    audioChunks = []; // Clear the recorded audio
                 };
 
                 mediaRecorder.start();
@@ -161,6 +124,9 @@
             if (isRecording && mediaRecorder) {
                 mediaRecorder.stop();
                 isRecording = false;
+
+                const button = document.getElementById('recordButton');
+                button.classList.remove('recording'); // Remove glow effect after recording
             }
         }
 
@@ -174,7 +140,7 @@
                 translations = await response.json();
                 if (translations.length > 0) {
                     updateTranslation();
-                    setInterval(updateTranslation, 30000);
+                    setInterval(updateTranslation, 30000); // Update every 30 seconds
                 } else {
                     document.getElementById('random-translation').innerText = 'No translations found.';
                 }
@@ -197,6 +163,26 @@
         }
 
         fetchTranslations();
+
+        // Play Sound Function
+        function playSound(text, language) {
+            const langMap = {
+                "English": "en",
+                "German": "de"
+            };
+
+            const mappedLang = langMap[language] || language; 
+
+            const params = new URLSearchParams({ text, language: mappedLang });
+            fetch('/synthesize?' + params.toString(), {
+                method: 'POST',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert("Audio playback failed.");
+                }
+            });
+        }
     </script>
 </body>
 </html>

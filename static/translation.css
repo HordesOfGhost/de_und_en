@@ -1,0 +1,106 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+form {
+    margin-bottom: 1.5rem; 
+}
+
+form label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+form select, form input {
+    padding: 8px; 
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; 
+}
+
+h1 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+form button {
+    padding: 8px 18px; 
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+
+.translation-result {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+}
+
+.translation-result h2 {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.translation-result p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.translation-result button {
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+}
+
+.translation-result button:hover {
+    text-decoration: underline;
+}
+
+
+#random-translation {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+
+button[title="Play Sound"] {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+}
+
+button[title="Play Sound"]:hover {
+    color: #007bff;
+}
+.centered-link {
+    text-align: center;
+    margin-top: 2rem; /* Optional margin */
+}

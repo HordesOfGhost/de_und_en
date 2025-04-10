@@ -1,0 +1,129 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.direction-form {
+    margin-bottom: 30px;
+}
+
+.direction-form label {
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+.direction-form select {
+    font-size: 1rem;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.card {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+#user-answer {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.feedback {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.back-button {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+.back-button:hover {
+    text-decoration: underline;
+}
+.card {
+    position: relative;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card .right-click-area {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20%;
+    height: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card h2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card h2 button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.button-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#play-answer-button-container {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
