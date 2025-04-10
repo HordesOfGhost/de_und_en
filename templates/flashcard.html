@@ -48,15 +48,17 @@
 
             <div class="feedback" id="feedback"></div>
             <div id="play-answer-button-container" style="display:none;">
-                {% if direction == 'en_to_de' %}
-                    <button id="play-answer-button" onclick="playAnswerAudio('German')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
-                        🔊 Play Answer
-                    </button>
-                {% elif direction == 'de_to_en' %}
-                    <button id="play-answer-button" onclick="playAnswerAudio('English')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
-                        🔊 Play Answer
-                    </button>
-                {% endif %}
+                <center>
+                    {% if direction == 'en_to_de' %}
+                        <button id="play-answer-button" onclick="playAnswerAudio('German')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
+                            🔊 
+                        </button>
+                    {% elif direction == 'de_to_en' %}
+                        <button id="play-answer-button" onclick="playAnswerAudio('English')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
+                            🔊
+                        </button>
+                    {% endif %}
+                </center>
             </div>
             <a href="/" class="back-button">⬅ Back</a>
         </div>
