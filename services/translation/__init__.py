@@ -1,1 +1,2 @@
-from .translate import translate_lng, translate_and_save
+from .translations import translate_translation_and_save
+from .conversations import translate_conversation_and_save

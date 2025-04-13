@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import events, landing, translate, transcribe, flashcards, synthesize
+from routers import events, landing, translate, transcribe, flashcards, synthesize, conversation
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
@@ -18,5 +18,6 @@ app.include_router(translate.router)
 app.include_router(transcribe.router)
 app.include_router(flashcards.router)
 app.include_router(synthesize.router)
+app.include_router(conversation.router)
 
 

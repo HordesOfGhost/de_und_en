@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Conversation</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='conversation.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="card">
+            <h2>🗣️ Generate a Conversation</h2>
+
+            <form id="conversation-form" method="post" action="/conversation">
+                <label for="topic">Enter a topic:</label>
+                <input type="text" id="topic" name="topic" placeholder="e.g., traveling, technology, food" required>
+                <button type="submit">Generate</button>
+            </form>
+
+            <div id="loading-message" style="display: none;">
+                ⏳ Generating text...
+            </div>
+
+        </div>
+    </div>
+    {% if english and german %}
+    <div class="conversation-columns">
+        <div class="conversation-box">
+            <h3>English</h3>
+            <pre>{{ english }}</pre>
+        </div>
+        <div class="conversation-box">
+            <h3>German</h3>
+            <pre>{{ german }}</pre>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <script>
+        const form = document.getElementById("conversation-form");
+        const loading = document.getElementById("loading-message");
+
+        form.addEventListener("submit", (event) => {
+            // Show loading message before form submission
+            loading.style.display = "block";
+            // Prevent form from submitting immediately
+            event.preventDefault();
+
+            // Simulate a delay for demo purposes, then submit the form
+            setTimeout(() => {
+                form.submit();
+            }, 1000); // Simulating a delay before form submission
+        });
+    </script>
+</body>
+</html>

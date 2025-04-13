@@ -2,7 +2,7 @@ from fastapi import APIRouter, Form, Request, Depends
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from services.db import get_db
-from services.translation import translate_and_save
+from services.translation import translate_translation_and_save
 from .config import templates
 
 router = APIRouter()
@@ -20,7 +20,7 @@ async def translation_form(request: Request, direction: str = "en_to_de"):
 
 @router.post("/translate", response_class=HTMLResponse)
 async def translate(request: Request, input_text: str = Form(...), direction: str = Form(...), db: Session = Depends(get_db)):
-    translated_text, saved_translation = translate_and_save(input_text, direction, db)
+    translated_text, saved_translation = translate_translation_and_save(input_text, direction, db)
 
     return templates.TemplateResponse("translation.html", {
         "request": request,

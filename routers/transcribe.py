@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from services.db import get_db
 from services.transcription import transcribe_audio
-from services.translation import translate_and_save
+from services.translation import translate_translation_and_save
 from .config import templates
 import os
 
@@ -25,7 +25,7 @@ async def transcribe(
     language_code = "en" if direction == "en_to_de" else "de"
 
     transcribed_text = transcribe_audio(audio_path, db, language=language_code)
-    translated_text, saved_translation = translate_and_save(transcribed_text, direction, db)
+    translated_text, saved_translation = translate_translation_and_save(transcribed_text, direction, db)
 
     os.remove(audio_path)
 

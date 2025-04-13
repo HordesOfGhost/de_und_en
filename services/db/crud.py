@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from .models import Translation
-from .schemas import TranslationModel
+from .models import Translation, Conversation
+from .schemas import TranslationModel, ConversationModel
 
 def save_translation(db: Session, translation_data: TranslationModel):
     
@@ -23,3 +23,14 @@ def save_translation(db: Session, translation_data: TranslationModel):
     db.commit()
     db.refresh(translation)
     return translation
+
+def save_conversation(db: Session, conversation_data: ConversationModel):
+    conversation = Conversation(
+        english=conversation_data.english,
+        german=conversation_data.german
+    )
+
+    db.add(conversation)
+    db.commit()
+    db.refresh(conversation)
+    return conversation

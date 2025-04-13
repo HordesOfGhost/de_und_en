@@ -27,10 +27,6 @@ class Conversation(Base):
     english = Column(String, nullable=False)
     german = Column(String, nullable=False)
 
-    __table_args__ = (
-        UniqueConstraint("english", "german", name="uq_english_german"),
-    )
-
 def get_db():
     db = SessionLocal()
     try:
