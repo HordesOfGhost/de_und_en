@@ -100,17 +100,25 @@
                 "German": "de"
             };
 
-            const mappedLang = langMap[language] || language; // fallback in case it's already 'en' or 'de'
-
+            const mappedLang = langMap[language] || language;
             const params = new URLSearchParams({ text, language: mappedLang });
-            fetch('/synthesize?' + params.toString(), {
-                method: 'POST',
-            })
-            .then(response => {
-                if (!response.ok) {
+
+            fetch('/synthesize?' + params.toString())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch audio.");
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const audioURL = URL.createObjectURL(blob);
+                    const audio = new Audio(audioURL);
+                    audio.play();
+                })
+                .catch(error => {
+                    console.error('Audio error:', error);
                     alert("Audio playback failed.");
-                }
-            });
+                });
         }
     </script>
 </body>
