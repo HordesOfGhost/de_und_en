@@ -1,8 +1,7 @@
 from services.models import en_tts_model,de_tts_model
-from .utils import play_audio
 import io
 import soundfile as sf
-def synthesize_text_and_play_audio(text, language):
+def synthesize_text(text, language):
     if language=='en':
         synthesized_audio = en_tts_model.tts(text=text, speaker="p314")
     elif language=='de':
@@ -13,4 +12,3 @@ def synthesize_text_and_play_audio(text, language):
     buffer.seek(0)
     return buffer.read()
 
-    play_audio(synthesized_audio)

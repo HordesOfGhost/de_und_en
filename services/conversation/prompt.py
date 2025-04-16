@@ -1,4 +1,4 @@
-prompt_template = '''
+prompt_template_for_conversation_generation = '''
     Create a natural-sounding conversation between two or more people about {}.
     Use realistic, everyday language and natural dialogue flow.
     Choose random character names. Only provide the conversation—no explanations or descriptions needed.

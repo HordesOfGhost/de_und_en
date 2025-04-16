@@ -1,8 +1,11 @@
 from services.models import madlad_model, madlad_tokenizer, device
+from services.models import gemini_model
+from .prompt import prompt_template_for_language_translation
 from services.utils import split_sentences
 import re
 
-def translate_lng(input_text, target_language):
+# Legacy with madlad
+def translate_lng_legacy(input_text, target_language):
     sentences = split_sentences(input_text)
     translated_sentences = " "
 
@@ -26,6 +29,20 @@ def translate_lng(input_text, target_language):
         decoded_sentence = madlad_tokenizer.batch_decode(outputs, skip_special_tokens=True)
         translated_sentences += " " + decoded_sentence[0]
     
+    return translated_sentences.strip()
+
+def translate_lng(input_text, target_language):
+    # sentences = split_sentences(input_text)
+    # translated_sentences = " "
+
+    if target_language=="de":
+        prompt = prompt_template_for_language_translation.format(lng_1='English',lng_2='German', text = input_text)
+
+        translated_sentences = gemini_model.generate_content(prompt).text
+    elif target_language=="en":
+        prompt = prompt_template_for_language_translation.format(lng_1='German',lng_2='English', text = input_text)
+
+        translated_sentences = gemini_model.generate_content(prompt).text
     return translated_sentences.strip()
 
 

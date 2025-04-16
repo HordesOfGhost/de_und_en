@@ -1,8 +1,9 @@
 import numpy as np
 import random
-from models import en_tts_model, de_tts_model
+from services.models import en_tts_model, de_tts_model
 from .config import eng_voice_pool
-from .utils import play_audio
+import io
+import soundfile as sf
 
 def synthesize_conversation(conversation, language):
     if language == 'en':
@@ -38,8 +39,10 @@ def synthesize_conversation(conversation, language):
 
         all_audio.append(audio)
 
-    # Concatenate and play
     full_audio = np.concatenate(all_audio)
-    play_audio(full_audio)
+    buffer = io.BytesIO()
+    sf.write(buffer, full_audio, 22050, format='WAV')
+    buffer.seek(0)
+    return buffer.read()
 
             

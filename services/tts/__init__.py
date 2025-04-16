@@ -1,1 +1,2 @@
-from .synthesis import synthesize_text_and_play_audio
+from .synthesis import synthesize_text
+from .conversation_synthesis import synthesize_conversation
