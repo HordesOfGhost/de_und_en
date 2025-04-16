@@ -23,12 +23,9 @@
 
             <!-- Record Button -->
             <div class="button-container">
-                <button id="recordButton"
-                    onmousedown="startRecording()"
-                    onmouseup="stopRecording()"
-                    onmouseleave="stopRecording()">
-                    Hold to Record
-                </button>
+                <button id="recordButton" onclick="toggleRecording()">
+                    Tap to Record
+                </button>                
             </div>
 
             {% if translated_text %}
@@ -75,58 +72,57 @@
         let mediaRecorder;
         let audioChunks = [];
 
-        // Start recording on hold
-        async function startRecording() {
-            if (isRecording) return;
-        
+        async function toggleRecording() {
             const button = document.getElementById('recordButton');
-            button.classList.add('recording'); // Add glow effect on hold
 
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
+            if (!isRecording) {
+                // Start Recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
 
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-                mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    const direction = document.getElementById('languageSelect').value;
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const direction = document.getElementById('languageSelect').value;
 
-                    const formData = new FormData();
-                    formData.append('audio_file', audioBlob, 'audio.wav');
-                    formData.append('direction', direction);
+                        const formData = new FormData();
+                        formData.append('audio_file', audioBlob, 'audio.wav');
+                        formData.append('direction', direction);
 
-                    const response = await fetch('/transcribe', {
-                        method: 'POST',
-                        body: formData,
-                    });
+                        const response = await fetch('/transcribe', {
+                            method: 'POST',
+                            body: formData,
+                        });
 
-                    if (response.redirected) {
-                        window.location.href = response.url; // Handle redirection
-                    } else {
-                        const html = await response.text();
-                        document.open();
-                        document.write(html);
-                        document.close();
-                    }
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        } else {
+                            const html = await response.text();
+                            document.open();
+                            document.write(html);
+                            document.close();
+                        }
 
-                    audioChunks = []; // Clear the recorded audio
-                };
+                        audioChunks = [];
+                    };
 
-                mediaRecorder.start();
-                isRecording = true;
-            } catch (err) {
-                console.error('Microphone access error:', err);
-            }
-        }
+                    mediaRecorder.start();
+                    isRecording = true;
+                    button.classList.add('recording');
+                    button.textContent = 'Tap to Stop';
 
-        function stopRecording() {
-            if (isRecording && mediaRecorder) {
+                } catch (err) {
+                    console.error('Microphone access error:', err);
+                }
+            } else {
+                // Stop Recording
                 mediaRecorder.stop();
                 isRecording = false;
-
-                const button = document.getElementById('recordButton');
-                button.classList.remove('recording'); // Remove glow effect after recording
+                button.classList.remove('recording');
+                button.textContent = 'Tap to Record';
             }
         }
 

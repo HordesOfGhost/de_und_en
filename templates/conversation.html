@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
     <title>Generate Conversation</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='conversation.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='conversation.css') }}"> 
 </head>
 <body>
     <div class="page-wrapper">
@@ -13,45 +13,84 @@
 
             <form id="conversation-form" method="post" action="/conversation">
                 <label for="topic">Enter a topic:</label>
-                <input type="text" id="topic" name="topic" placeholder="e.g., traveling, technology, food" required>
+                <input type="text" id="topic" name="topic" placeholder="e.g., traveling, technology, food" required />
                 <button type="submit">Generate</button>
             </form>
 
-            <div id="loading-message" style="display: none;">
-                ⏳ Generating text...
+            <div class="centered-link">
+                <a href="/">⬅ Back</a>
             </div>
 
+            <div id="loading-message" style="display: none;">
+                ⏳ Generating Conversation...
+            </div>
         </div>
-    </div>
-    {% if english and german %}
-    <div class="conversation-columns">
-        <div class="conversation-box">
-            <h3>English</h3>
-            <pre>{{ english }}</pre>
-        </div>
-        <div class="conversation-box">
-            <h3>German</h3>
-            <pre>{{ german }}</pre>
-        </div>
-    </div>
-    {% endif %}
 
+        {% if english and german %}
+        <div class="conversation-columns">
+            <div class="conversation-box">
+                <h3>English</h3>
+                <pre>{{ english }}</pre>
+                <button 
+                    onclick="playSound('{{ english }}', 'English')"
+                    class="play-button"  
+                    style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
+                    title="Play Sound">
+                    🔊
+                </button>
+            </div>
+            <div class="conversation-box">
+                <h3>German</h3>
+                <pre>{{ german }}</pre>
+                <button 
+                    onclick="playSound('{{ german }}', 'German')" 
+                    class="play-button" 
+                    style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
+                    title="Play Sound">
+                    🔊
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
     <script>
         const form = document.getElementById("conversation-form");
         const loading = document.getElementById("loading-message");
 
         form.addEventListener("submit", (event) => {
-            // Show loading message before form submission
             loading.style.display = "block";
-            // Prevent form from submitting immediately
             event.preventDefault();
-
-            // Simulate a delay for demo purposes, then submit the form
             setTimeout(() => {
                 form.submit();
-            }, 1000); // Simulating a delay before form submission
+            }, 1000);
         });
+        function playSound(text, language) {
+            const langMap = {
+                "English": "en",
+                "German": "de"
+            };
+
+            const mappedLang = langMap[language] || language;
+            const params = new URLSearchParams({ text, language: mappedLang });
+
+            fetch('/synthesize-conversation?' + params.toString())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch audio.");
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const audioURL = URL.createObjectURL(blob);
+                    const audio = new Audio(audioURL);
+                    audio.play();
+                })
+                .catch(error => {
+                    console.error('Audio error:', error);
+                    alert("Audio playback failed.");
+                });
+        }
     </script>
 </body>
 </html>

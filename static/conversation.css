@@ -1,156 +1,142 @@
-/* Base Reset */
-body, html {
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
     margin: 0;
     padding: 0;
-    /* box-sizing: border-box; */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8;
 }
 
-/* Wrapper Layout */
 .page-wrapper {
-    /* display: flex; */
-    /* flex-direction: column; Stack vertically */
-    /* align-items: center; */
-    padding: 8px;
-}
-
-/* Card Styling */
-.card {
-    background-color: #ffffff;
-    padding: 1.2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    margin-bottom: 1rem;
-}
-
-
-.card:hover {
-    transform: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.card h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-/* Form Styling */
-#conversation-form {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem; /* Reduced spacing between elements */
-    margin-bottom: 1rem;
+    align-items: center;
+    padding: 40px 20px;
 }
 
-label {
-    font-weight: bold;
-    color: #444;
+.card {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 input[type="text"] {
-    padding: 0.4rem 0.5rem; /* Reduced padding */
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 0.95rem;
-    width: 100%;
+    font-size: 16px;
 }
 
 button {
-    padding: 0.45rem 1.2rem; /* Reduced padding */
-    background-color: #007bff;
+    background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px;
     border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
-    font-size: 0.95rem;
 }
 
-/* Loading Indicator */
+button:hover {
+    background-color: #45a049;
+}
+
+.centered-link {
+    margin-top: 20px;
+}
+
+.centered-link a {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
 #loading-message {
-    color: #007bff;
-    font-size: 1.05rem;
-    text-align: center;
-    animation: blink 1s infinite;
-    margin: 1rem 0;
+    margin-top: 15px;
+    color: #555;
+    font-style: italic;
 }
 
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-}
-
-/* Conversation Columns */
+/* Flexbox Layout for Conversation Columns */
 .conversation-columns {
     display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    margin-top: 1.5rem;
     justify-content: center;
+    gap: 20px;
+    flex-wrap: nowrap; /* Ensure columns stay in one row */
+    width: 100%;
+    padding: 0 20px;
 }
 
 .conversation-box {
-    flex: 1;
-    min-width: 300px;
-    max-height: 400px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 750px; /* Limit width of each box */
+    height: 100%;
     overflow-y: auto;
-    overflow-x: hidden;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    background-color: #fdfdfd;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
+    white-space: pre-wrap;
 }
 
-/* Scrollbar (Optional) */
 .conversation-box::-webkit-scrollbar {
     width: 6px;
 }
 
 .conversation-box::-webkit-scrollbar-thumb {
-    background-color: #ccc;
+    background-color: #aaa;
     border-radius: 3px;
 }
 
-.conversation-box h3 {
-    margin-bottom: 0.8rem;
-    text-align: center;
-    color: #222;
-    flex-shrink: 0;
+/* Play Button */
+.play-button {
+    background-color: #ffffff;
+    border: 2px solid #4CAF50;
+    color: #4CAF50;
+    border-radius: 50%;
+    font-size: 1.1em;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* Preformatted Text Handling */
-.conversation-box pre {
-    margin: 0;
-    padding: 0;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #555;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    overflow: hidden;
-    flex-grow: 1;
+.play-button:hover {
+    background-color: #4CAF50;
+    color: white;
+    transform: scale(1.1);
 }
 
-/* Responsive Design */
+.play-button:active {
+    transform: scale(1.05);
+    background-color: #3e9143;
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .conversation-columns {
-        flex-direction: column;
+        gap: 15px;
+        padding: 0 10px;
     }
 
-    .card {
-        padding: 1rem;
-    }
-
-    input[type="text"],
-    button {
-        font-size: 0.9rem;
+    .conversation-box {
+        max-width: 100%; /* Take up full width on mobile */
     }
 }
