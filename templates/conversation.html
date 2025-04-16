@@ -32,23 +32,28 @@
                 <h3>English</h3>
                 <pre>{{ english }}</pre>
                 <button 
-                    onclick="playSound('{{ english }}', 'English')"
                     class="play-button"  
+                    data-text="{{ english | escape }}" 
+                    data-lang="English"
+                    onclick="playSoundFromDataset(this)"
                     style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
                     title="Play Sound">
                     🔊
                 </button>
+
             </div>
             <div class="conversation-box">
                 <h3>German</h3>
                 <pre>{{ german }}</pre>
                 <button 
-                    onclick="playSound('{{ german }}', 'German')" 
-                    class="play-button" 
+                    class="play-button"  
+                    data-text="{{ german | escape }}" 
+                    data-lang="German"
+                    onclick="playSoundFromDataset(this)"
                     style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
                     title="Play Sound">
-                    🔊
-                </button>
+                🔊
+            </button>
             </div>
         </div>
         {% endif %}
@@ -65,14 +70,22 @@
                 form.submit();
             }, 1000);
         });
+
+        function playSoundFromDataset(buttonElement) {
+            const text = buttonElement.getAttribute('data-text');
+            const lang = buttonElement.getAttribute('data-lang');
+            playSound(text, lang);
+        }
+
         function playSound(text, language) {
+            console.log("herereee");
             const langMap = {
                 "English": "en",
                 "German": "de"
             };
 
             const mappedLang = langMap[language] || language;
-            const params = new URLSearchParams({ text, language: mappedLang });
+            const params = new URLSearchParams({ conversation: text, language: mappedLang });
 
             fetch('/synthesize-conversation?' + params.toString())
                 .then(response => {

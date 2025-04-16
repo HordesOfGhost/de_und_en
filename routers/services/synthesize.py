@@ -14,7 +14,7 @@ async def synthesize_translations(text: str = Query(...), language: str = Query(
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 @router.get("/synthesize-conversation")
-async def synthesize_conversations(conversation: str = Query(...), language: str = Query(...)):
+def synthesize_conversations(conversation: str = Query(...), language: str = Query(...)):
     try:
         wav_bytes = synthesize_conversation(conversation, language)
         return Response(content=wav_bytes, media_type="audio/wav")
