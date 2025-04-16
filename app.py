@@ -1,7 +1,17 @@
 from fastapi import FastAPI
-from routers import events, landing, translate, transcribe, flashcards, synthesize, conversation
+from routers.services import (
+    translate,
+    transcribe,
+    flashcards,
+    synthesize,
+    conversation,
+    landing,
+)
+from routers.events import events
+
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
+
 
 app = FastAPI()
 
