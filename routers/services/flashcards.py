@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from services.db import get_db
-from .config import templates
+from routers.config import templates
 import random
 
 router = APIRouter()

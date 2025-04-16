@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
-from .config import templates
+from routers.config import templates
 from sqlalchemy.orm import Session
 from services.db.models import get_db
 from services.db.models import Translation

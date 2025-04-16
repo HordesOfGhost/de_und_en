@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from services.db import get_db
 from services.translation import translate_translation_and_save
-from .config import templates
+from routers.config import templates
 
 router = APIRouter()
 
