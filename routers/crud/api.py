@@ -2,13 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Path, Form
 from sqlalchemy.orm import Session
 from services.db.models import get_db
 from services.db.utils import get_model
-from enum import Enum
+from services.db.crud_for_services import (
+    create_record as create_db_record,
+    get_records as get_all_db_records,
+    get_record as get_single_db_record,
+    update_record as update_db_record,
+    delete_record as delete_db_record,
+)
+from schemas.enums import TableName
+
 
 router = APIRouter()
-
-class TableName(str, Enum):
-    conversations = "conversations"
-    translations = "translations"
 
 @router.post("/records", tags=['crud'])
 def create_record(
@@ -18,10 +22,7 @@ def create_record(
     db: Session = Depends(get_db)
 ):
     Model = get_model(table_name)
-    record = Model(english=english, german=german)
-    db.add(record)
-    db.commit()
-    db.refresh(record)
+    record = create_db_record(db, Model, english, german)
     return {"message": "Record created", "record": {
         "id": record.id,
         "english": record.english,
@@ -34,7 +35,7 @@ def read_records(
     db: Session = Depends(get_db)
 ):
     Model = get_model(table_name)
-    records = db.query(Model).all()
+    records = get_all_db_records(db, Model)
     return [
         {"id": r.id, "english": r.english, "german": r.german}
         for r in records
@@ -47,7 +48,7 @@ def read_single_record(
     db: Session = Depends(get_db)
 ):
     Model = get_model(table_name)
-    record = db.query(Model).get(record_id)
+    record = get_single_db_record(db, Model, record_id )
     if not record:
         raise HTTPException(status_code=404, detail="Record not found")
     return {"id": record.id, "english": record.english, "german": record.german}
@@ -61,14 +62,10 @@ def update_record(
     db: Session = Depends(get_db)
 ):
     Model = get_model(table_name)
-    record = db.query(Model).get(record_id)
+    record = get_single_db_record(db, Model, record_id)
     if not record:
         raise HTTPException(status_code=404, detail="Record not found")
-
-    record.english = english
-    record.german = german
-    db.commit()
-    db.refresh(record)
+    update_db_record(db, Model, record_id, english, german)
     return {"message": f"Record {record_id} updated", "record": {
         "id": record.id,
         "english": record.english,
@@ -82,10 +79,9 @@ def delete_record(
     db: Session = Depends(get_db)
 ):
     Model = get_model(table_name)
-    record = db.query(Model).get(record_id)
+    record = get_single_db_record(db, Model, record_id)
     if not record:
         raise HTTPException(status_code=404, detail="Record not found")
 
-    db.delete(record)
-    db.commit()
+    delete_db_record(db, Model, record_id)
     return {"message": f"Deleted record {record_id} from {table_name}"}
