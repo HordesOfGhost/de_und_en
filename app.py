@@ -8,7 +8,7 @@ from routers.services import (
     landing,
 )
 from routers.events import events
-
+from routers.crud import api
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
@@ -29,5 +29,7 @@ app.include_router(transcribe.router)
 app.include_router(flashcards.router)
 app.include_router(synthesize.router)
 app.include_router(conversation.router)
+app.include_router(api.router)
+
 
 
