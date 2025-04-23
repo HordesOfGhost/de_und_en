@@ -2,61 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Generate Conversation</title>
+    <title>Generate or Retrieve Conversation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', path='conversation.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', path='conversation.css') }}">
 </head>
 <body>
     <div class="page-wrapper">
         <div class="card">
-            <h2>🗣️ Generate a Conversation</h2>
+            <h2>🗣️ Generate or Retrieve a Conversation</h2>
 
+            <!-- 🔹 Generate form -->
             <form id="conversation-form" method="post" action="/conversation">
-                <label for="topic">Enter a topic:</label>
-                <input type="text" id="topic" name="topic" placeholder="e.g., traveling, technology, food" required />
+                <div class="form-group">
+                    <label for="topic">Generate by Topic:</label>
+                    <input type="text" id="topic" name="topic" placeholder="e.g., traveling, technology, food" required />
+                </div>
                 <button type="submit">Generate</button>
             </form>
 
-            <div class="centered-link">
-                <a href="/">⬅ Back</a>
-            </div>
-
-            <div id="loading-message" style="display: none;">
+            <div id="loading-message" style="display: none; margin-top: 0.5rem;">
                 ⏳ Generating Conversation...
             </div>
-        </div>
 
-        {% if english and german %}
-        <div class="conversation-columns">
-            <div class="conversation-box">
-                <h3>English</h3>
-                <pre>{{ english }}</pre>
-                <button 
-                    class="play-button"  
-                    data-text="{{ english | escape }}" 
-                    data-lang="English"
-                    onclick="playSoundFromDataset(this)"
-                    style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
-                    title="Play Sound">
-                    🔊
-                </button>
+            <hr style="margin: 2rem 0;" />
 
-            </div>
-            <div class="conversation-box">
-                <h3>German</h3>
-                <pre>{{ german }}</pre>
-                <button 
-                    class="play-button"  
-                    data-text="{{ german | escape }}" 
-                    data-lang="German"
-                    onclick="playSoundFromDataset(this)"
-                    style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
-                    title="Play Sound">
-                🔊
-            </button>
+            <!-- 🔹 Retrieve form -->
+            <form id="retrieve-form">
+                <div class="form-group">
+                    <label for="conversation-id">Or Retrieve by ID:</label>
+                    <input type="number" id="conversation-id" name="conversation_id" placeholder="e.g., 3" required />
+                </div>
+                <button type="submit">Retrieve</button>
+            </form>
+
+            <div id="retrieve-error" style="display: none;"></div>
+
+            <div class="centered-link" style="margin-top: 2rem;">
+                <a href="/">⬅ Back</a>
             </div>
         </div>
-        {% endif %}
+
+        <!-- 🔹 Show generated or retrieved result (shared area) -->
+        <div id="conversation-output" style="margin-top: 2rem; {% if not english and not german %}display: none;{% endif %}">
+            <div class="conversation-columns">
+                <div class="conversation-box">
+                    <h3>English</h3>
+                    <pre id="output-english">{% if english %}{{ english }}{% endif %}</pre>
+                    <button 
+                        id="play-english"
+                        style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
+                        data-text="{{ english | escape }}" 
+                        data-lang="English"
+                        onclick="playSoundFromDataset(this)"
+                        title="Play Sound"
+                        {% if not english %}style="display: none;"{% endif %}>
+                        🔊
+                    </button>
+                </div>
+                <div class="conversation-box">
+                    <h3>German</h3>
+                    <pre id="output-german">{% if german %}{{ german }}{% endif %}</pre>
+                    <button 
+                        id="play-german"
+                        style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
+                        data-text="{{ german | escape }}" 
+                        data-lang="German"
+                        onclick="playSoundFromDataset(this)"
+                        title="Play Sound"
+                        {% if not german %}style="display: none;"{% endif %}>
+                        🔊
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -78,7 +96,6 @@
         }
 
         function playSound(text, language) {
-            console.log("herereee");
             const langMap = {
                 "English": "en",
                 "German": "de"
@@ -89,9 +106,7 @@
 
             fetch('/synthesize-conversation?' + params.toString())
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch audio.");
-                    }
+                    if (!response.ok) throw new Error("Failed to fetch audio.");
                     return response.blob();
                 })
                 .then(blob => {
@@ -104,6 +119,43 @@
                     alert("Audio playback failed.");
                 });
         }
+
+        // Retrieve by ID logic
+        const retrieveForm = document.getElementById("retrieve-form");
+        const retrievedConversation = document.getElementById("conversation-output");
+        const retrieveError = document.getElementById("retrieve-error");
+
+        retrieveForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const id = document.getElementById("conversation-id").value;
+            retrieveError.style.display = "none";
+            retrievedConversation.style.display = "none";
+
+            fetch(`/records/${id}?table_name=conversations`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Conversation not found.");
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("output-english").textContent = data.english;
+                    document.getElementById("output-german").textContent = data.german;
+
+                    const playEnglish = document.getElementById("play-english");
+                    const playGerman = document.getElementById("play-german");
+
+                    playEnglish.setAttribute('data-text', data.english);
+                    playGerman.setAttribute('data-text', data.german);
+
+                    playEnglish.style.display = "inline-block";
+                    playGerman.style.display = "inline-block";
+
+                    retrievedConversation.style.display = "block";
+                })
+                .catch(error => {
+                    retrieveError.textContent = error.message;
+                    retrieveError.style.display = "block";
+                });
+        });
     </script>
 </body>
 </html>

@@ -100,30 +100,6 @@ button:hover {
     background-color: #aaa;
     border-radius: 3px;
 }
-
-/* Play Button */
-.play-button {
-    background-color: #ffffff;
-    border: 2px solid #4CAF50;
-    color: #4CAF50;
-    border-radius: 50%;
-    font-size: 1.1em;
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.play-button:hover {
-    background-color: #4CAF50;
-    color: white;
-    transform: scale(1.1);
-}
-
 .play-button:active {
     transform: scale(1.05);
     background-color: #3e9143;
@@ -139,4 +115,35 @@ button:hover {
     .conversation-box {
         max-width: 100%; /* Take up full width on mobile */
     }
+}
+.form-group {
+    margin: 1rem 0;
+}
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+.form-group button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+#retrieve-error {
+    margin-top: 0.5rem;
+    color: red;
+}
+.conversation-columns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+.conversation-box {
+    width: 45%;
 }
