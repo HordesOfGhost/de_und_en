@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from .models import Translation, Conversation
-from .schemas import TranslationModel, ConversationModel
+from schemas.translation import TranslationModel
+from schemas.conversation import  ConversationModel
 
 def save_translation(db: Session, translation_data: TranslationModel):
     

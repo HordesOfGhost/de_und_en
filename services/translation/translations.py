@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from services.db.schemas import TranslationModel
-from services.db.crud import save_translation
+from schemas.translation import TranslationModel
+from services.db.crud_for_services import save_translation
 from services.tts import synthesize_text
 from .utils import translate_lng
 
