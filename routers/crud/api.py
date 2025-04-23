@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Path, Form
 from sqlalchemy.orm import Session
 from services.db.models import get_db
 from services.db.utils import get_model
-from services.db.crud_for_services import (
+from services.db.crud_for_records import (
     create_record as create_db_record,
     get_records as get_all_db_records,
     get_record as get_single_db_record,
