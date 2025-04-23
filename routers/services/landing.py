@@ -12,7 +12,7 @@ router = APIRouter()
 async def landing(request: Request):
     return templates.TemplateResponse("landing.html", {"request": request})
 
-@router.get("/random-translations")
+@router.get("/random-translations", tags=['random translation'])
 def random_translations(db: Session = Depends(get_db)):
     results = db.query(Translation).order_by(func.random()).limit(5).all()
     return [{"english": t.english, "german": t.german} for t in results]

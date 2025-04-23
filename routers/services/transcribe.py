@@ -9,8 +9,18 @@ import os
 
 router = APIRouter()
 
+@router.get("/transcribe",tags=['transcribe'], response_class=HTMLResponse)
+async def transcribe_page(request: Request):
+    return templates.TemplateResponse("transcription.html", {
+        "request": request,
+        "transcribed_text": "",
+        "input_language": "Audio",
+        "transcribed_language": "English",
+        "input_audio": ""
+    })
+
 # Handle POST request for transcription
-@router.post("/transcribe", response_class=HTMLResponse)
+@router.post("/transcribe",tags=['transcribe'], response_class=HTMLResponse)
 async def transcribe(
     request: Request,
     audio_file: UploadFile = File(...),
@@ -38,12 +48,3 @@ async def transcribe(
         "translated_text":translated_text
     })
 
-@router.get("/transcribe", response_class=HTMLResponse)
-async def main_page(request: Request):
-    return templates.TemplateResponse("transcription.html", {
-        "request": request,
-        "transcribed_text": "",
-        "input_language": "Audio",
-        "transcribed_language": "English",
-        "input_audio": ""
-    })

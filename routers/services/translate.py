@@ -7,8 +7,8 @@ from routers.config import templates
 
 router = APIRouter()
 
-@router.get("/translate", response_class=HTMLResponse)
-async def translation_form(request: Request, direction: str = "en_to_de"):
+@router.get("/translate",tags=['translate'], response_class=HTMLResponse)
+async def translation_page(request: Request, direction: str = "en_to_de"):
     return templates.TemplateResponse("translation.html", {
         "request": request,
         "direction": direction,
@@ -18,7 +18,7 @@ async def translation_form(request: Request, direction: str = "en_to_de"):
         "input_text": ""
     })
 
-@router.post("/translate", response_class=HTMLResponse)
+@router.post("/translate",tags=['translate'], response_class=HTMLResponse)
 async def translate(request: Request, input_text: str = Form(...), direction: str = Form(...), db: Session = Depends(get_db)):
     translated_text, saved_translation = translate_translation_and_save(input_text, direction, db)
 
