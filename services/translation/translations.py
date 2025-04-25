@@ -2,17 +2,17 @@ from sqlalchemy.orm import Session
 from schemas.translation import TranslationModel
 from services.db.crud_for_services import save_translation
 from services.tts import synthesize_text
-from .utils import translate_lng
+from .utils import translate_lng_with_gemini, translate_lng_with_madlad
 
 ### Legacy function with Madlad
-def translate_translation_and_save_legacy(input_text: str, direction: str, db: Session):
+def translate_translation_and_save_with_madlad(input_text: str, direction: str, db: Session):
 
     if direction == "en_to_de":
-        translated_text = translate_lng(input_text, target_language = "2de")
+        translated_text = translate_lng_with_madlad(input_text, target_language = "2de")
         synthesize_text(input_text,"en")
         synthesize_text(translated_text,"de")
     elif direction == "de_to_en":
-        translated_text = translate_lng(input_text, target_language = "2en")
+        translated_text = translate_lng_with_madlad(input_text, target_language = "2en")
         synthesize_text(input_text,"de")
         synthesize_text(translated_text,"en")
 
@@ -23,14 +23,14 @@ def translate_translation_and_save_legacy(input_text: str, direction: str, db: S
     saved_translation = save_translation(db, translation_data)
     return translated_text, saved_translation
 
-def translate_translation_and_save(input_text: str, direction: str, db: Session):
+def translate_translation_and_save_with_gemini(input_text: str, direction: str, db: Session):
 
     if direction == "en_to_de":
-        translated_text = translate_lng(input_text, target_language = "de")
+        translated_text = translate_lng_with_gemini(input_text, target_language = "de")
         synthesize_text(input_text,"en")
         synthesize_text(translated_text,"de")
     elif direction == "de_to_en":
-        translated_text = translate_lng(input_text, target_language = "en")
+        translated_text = translate_lng_with_gemini(input_text, target_language = "en")
         synthesize_text(input_text,"de")
         synthesize_text(translated_text,"en")
 

@@ -5,7 +5,7 @@ from services.utils import split_sentences
 import re
 
 # Legacy with madlad
-def translate_lng_legacy(input_text, target_language):
+def translate_lng_with_madlad(input_text, target_language):
     sentences = split_sentences(input_text)
     translated_sentences = " "
 
@@ -31,7 +31,7 @@ def translate_lng_legacy(input_text, target_language):
     
     return translated_sentences.strip()
 
-def translate_lng(input_text, target_language):
+def translate_lng_with_gemini(input_text, target_language):
     # sentences = split_sentences(input_text)
     # translated_sentences = " "
 

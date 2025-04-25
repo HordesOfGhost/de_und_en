@@ -1,2 +1,2 @@
-from .translations import translate_translation_and_save
-from .conversations import translate_conversation_and_save
+from .translations import translate_translation_and_save_with_gemini
+from .conversations import translate_conversation_and_save_with_gemini

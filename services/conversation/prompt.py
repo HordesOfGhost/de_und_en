@@ -21,6 +21,6 @@ prompt_template_for_conversation_generation = '''
 
     The conversation should feel spontaneous and natural, with varied pacing, incorporating different grammatical structures to make it engaging and dynamic. Include a mix of simple and complex sentences, varied tones (e.g., excited, thoughtful, casual), and occasional shifts in perspective or tense.
 
-    Only provide the conversation—no explanations or descriptions needed and dont use *(aesterisks).
+    Only provide the conversation—no explanations or descriptions needed and dont use *(aesterisks) in conversations.
     Write the character's name first, followed by their dialogue. Ensure the character's name are gender-neutral.
 '''
