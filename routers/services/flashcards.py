@@ -8,7 +8,7 @@ import random
 
 router = APIRouter()
 
-@router.get("/flashcard", tags = ['flsashcard'], response_class=HTMLResponse)
+@router.get("/flashcard", tags = ['flsashcard'], response_class=HTMLResponse, include_in_schema=False)
 async def flashcard_page(
     request: Request,
     direction: str = Query("en_to_de"),

@@ -8,7 +8,7 @@ from sqlalchemy import func
 
 router = APIRouter()
 
-@router.get("/", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def landing(request: Request):
     return templates.TemplateResponse("landing.html", {"request": request})
 
