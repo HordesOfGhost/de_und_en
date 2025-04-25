@@ -81,12 +81,36 @@
         const form = document.getElementById("conversation-form");
         const loading = document.getElementById("loading-message");
 
-        form.addEventListener("submit", (event) => {
-            loading.style.display = "block";
+        form.addEventListener("submit", async (event) => {
             event.preventDefault();
-            setTimeout(() => {
-                form.submit();
-            }, 1000);
+            loading.style.display = "block";
+            const formData = new FormData(form);
+
+            // Send the form data to the server via POST request
+            const response = await fetch('/conversation', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            // Hide the loading message
+            loading.style.display = "none";
+
+            // Display the results in the conversation output
+            document.getElementById("output-english").textContent = result.english;
+            document.getElementById("output-german").textContent = result.german;
+
+            const playEnglish = document.getElementById("play-english");
+            const playGerman = document.getElementById("play-german");
+
+            playEnglish.setAttribute('data-text', result.english);
+            playGerman.setAttribute('data-text', result.german);
+
+            playEnglish.style.display = "inline-block";
+            playGerman.style.display = "inline-block";
+
+            document.getElementById("conversation-output").style.display = "block";
         });
 
         function playSoundFromDataset(buttonElement) {

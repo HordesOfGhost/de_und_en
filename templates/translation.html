@@ -5,56 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='translation.css') }}">
-
 </head>
 <body>
     <main>
         <h1>Translation</h1>
         <div class="container">
-            <form action="/translate" method="post">
+            <form id="translate-form">
                 <label for="direction">Select translation direction:</label><br>
                 <select name="direction" id="direction">
-                    <option value="en_to_de" {% if direction == "en_to_de" %}selected{% endif %}>English to German</option>
-                    <option value="de_to_en" {% if direction == "de_to_en" %}selected{% endif %}>German to English</option>
+                    <option value="en_to_de">English to German</option>
+                    <option value="de_to_en">German to English</option>
                 </select>
                 <br>
 
-                <input type="text" name="input_text" placeholder="Enter your text" required>
+                <input type="text" name="input_text" id="input_text" placeholder="Enter your text" required>
                 <br>
                 <button type="submit">Translate</button>
             </form>
 
-            {% if translated_text %}
-                <div style="margin-bottom: 1em;">
-                    <h2>{{ input_language }}</h2>
-                    <p style="display: inline-flex; align-items: center; gap: 0.5em; margin: 0;">
-                        {{ input_text }}
-                        <button 
-                            onclick="playSound('{{ input_text }}', '{{ input_language }}')" 
-                            style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
-                            title="Play Sound">
-                            🔊
-                        </button>
-                    </p>
-                </div>
-
+            <div id="translation-result" style="display: none; margin-top: 1em;">
                 <div>
-                    <h2>{{ translated_language }}</h2>
-                    <p style="display: inline-flex; align-items: center; gap: 0.5em; margin: 0;">
-                        {{ translated_text }}
-                        <button 
-                            onclick="playSound('{{ translated_text }}', '{{ translated_language }}')" 
-                            style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
-                            title="Play Sound">
-                            🔊
-                        </button>
-                    </p>
+                    <h2 id="input-language-heading"></h2>
+                    <p id="input-text-display" style="display: inline-flex; align-items: center; gap: 0.5em;"></p>
                 </div>
-            {% endif %}
+                <div>
+                    <h2 id="translated-language-heading"></h2>
+                    <p id="translated-text-display" style="display: inline-flex; align-items: center; gap: 0.5em;"></p>
+                </div>
+            </div>
+
             <div class="centered-link">
                 <a href="/">⬅ Back</a>
             </div>
-            
         </div>
     </main>
 
@@ -95,6 +77,7 @@
         }
 
         fetchTranslations();
+
         function playSound(text, language) {
             const langMap = {
                 "English": "en",
@@ -121,6 +104,46 @@
                     alert("Audio playback failed.");
                 });
         }
+
+        document.getElementById("translate-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const inputText = document.getElementById("input_text").value;
+            const direction = document.getElementById("direction").value;
+
+            const formData = new FormData();
+            formData.append("input_text", inputText);
+            formData.append("direction", direction);
+
+            try {
+                const response = await fetch("/translate", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error("Translation failed");
+
+                const data = await response.json();
+
+                document.getElementById("input-language-heading").textContent = data.input_language;
+                document.getElementById("input-text-display").innerHTML = `
+                    ${data.input_text}
+                    <button onclick="playSound('${data.input_text}', '${data.input_language}')" title="Play Sound">🔊</button>
+                `;
+
+                document.getElementById("translated-language-heading").textContent = data.translated_language;
+                document.getElementById("translated-text-display").innerHTML = `
+                    ${data.translated_text}
+                    <button onclick="playSound('${data.translated_text}', '${data.translated_language}')" title="Play Sound">🔊</button>
+                `;
+
+                document.getElementById("translation-result").style.display = "block";
+
+            } catch (err) {
+                alert("Error: " + err.message);
+                console.error(err);
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,193 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='transcription.css') }}">
-    <title>Transcribe</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/transcription.css">
+  <title>Transcribe</title>
 </head>
 <body>
-    <main>
-        <h1>Transcription</h1>
-        <div class="container">
+  <main>
+    <h1>Transcription</h1>
+    <div class="container">
 
-            <!-- Language Selection -->
-            <div class="button-container">
-                <label for="languageSelect">Select Translation:</label>
-                <select id="languageSelect">
-                    <option value="en_to_de" {% if input_language == 'en' %}selected{% endif %}>English to German</option>
-                    <option value="de_to_en" {% if input_language == 'de' %}selected{% endif %}>German to English</option>
-                </select>
-            </div>
+      <!-- Language Selection -->
+      <div class="button-container">
+        <label for="languageSelect">Select Translation:</label>
+        <select id="languageSelect">
+          <option value="en_to_de">English to German</option>
+          <option value="de_to_en">German to English</option>
+        </select>
+      </div>
 
-            <!-- Record Button -->
-            <div class="button-container">
-                <button id="recordButton" onclick="toggleRecording()">
-                    Tap to Record
-                </button>                
-            </div>
+      <!-- Record Button -->
+      <div class="button-container">
+        <button id="recordButton" onclick="toggleRecording()">Tap to Record</button>
+      </div>
 
-            {% if translated_text %}
-            <div style="margin-bottom: 1em;">
-                <h2>{{ input_language }}</h2>
-                <p class="text-with-icon">
-                    <span>{{ input_text }}</span>
-                    <button 
-                        onclick="playSound('{{ input_text }}', '{{ input_language }}')" 
-                        style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
-                        title="Play Sound">
-                        🔊
-                    </button>
-                </p>
-            </div>
-
-            <div>
-                <h2>{{ translated_language }}</h2>
-                <p class="text-with-icon">
-                    <span>{{ translated_text }}</span>
-                    <button 
-                        onclick="playSound('{{ translated_text }}', '{{ translated_language }}')" 
-                        style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
-                        title="Play Sound">
-                        🔊
-                    </button>
-                </p>
-            </div>
-            {% endif %}
-            
-            <div class="centered-link">
-                <a href="/">⬅ Back</a>
-            </div>            
-    
+      <!-- Transcription Display -->
+      <div id="resultsContainer" style="margin-top: 2em; display: none;">
+        <div style="margin-bottom: 1em;">
+          <h2 id="inputLanguage"></h2>
+          <p class="text-with-icon">
+            <span id="inputText"></span>
+            <button onclick="playSoundFromResult('input')" title="Play Sound">🔊</button>
+          </p>
         </div>
-    </main>
 
-    <footer>
-        <p id="random-translation">Loading...</p>
-    </footer>
+        <div>
+          <h2 id="translatedLanguage"></h2>
+          <p class="text-with-icon">
+            <span id="translatedText"></span>
+            <button onclick="playSoundFromResult('translated')" title="Play Sound">🔊</button>
+          </p>
+        </div>
+      </div>
 
-    <script>
-        let isRecording = false;
-        let mediaRecorder;
-        let audioChunks = [];
+      <div class="centered-link">
+        <a href="/">⬅ Back</a>
+      </div>
 
-        async function toggleRecording() {
-            const button = document.getElementById('recordButton');
+    </div>
+  </main>
 
-            if (!isRecording) {
-                // Start Recording
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
+  <footer>
+    <p id="random-translation">Loading...</p>
+  </footer>
 
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+  <script>
+    let isRecording = false;
+    let mediaRecorder;
+    let audioChunks = [];
 
-                    mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        const direction = document.getElementById('languageSelect').value;
+    async function toggleRecording() {
+      const button = document.getElementById('recordButton');
 
-                        const formData = new FormData();
-                        formData.append('audio_file', audioBlob, 'audio.wav');
-                        formData.append('direction', direction);
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
 
-                        const response = await fetch('/transcribe', {
-                            method: 'POST',
-                            body: formData,
-                        });
+          mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                        } else {
-                            const html = await response.text();
-                            document.open();
-                            document.write(html);
-                            document.close();
-                        }
+          mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const direction = document.getElementById('languageSelect').value;
 
-                        audioChunks = [];
-                    };
+            const formData = new FormData();
+            formData.append('audio_file', audioBlob, 'audio.wav');
+            formData.append('direction', direction);
 
-                    mediaRecorder.start();
-                    isRecording = true;
-                    button.classList.add('recording');
-                    button.textContent = 'Tap to Stop';
+            const response = await fetch('/transcribe', {
+              method: 'POST',
+              body: formData,
+            });
 
-                } catch (err) {
-                    console.error('Microphone access error:', err);
-                }
+            if (response.ok) {
+              const result = await response.json();
+              showTranscription(result);
             } else {
-                // Stop Recording
-                mediaRecorder.stop();
-                isRecording = false;
-                button.classList.remove('recording');
-                button.textContent = 'Tap to Record';
+              alert("Transcription failed.");
             }
+
+            audioChunks = [];
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          button.classList.add('recording');
+          button.textContent = 'Tap to Stop';
+
+        } catch (err) {
+          console.error('Microphone access error:', err);
         }
+      } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        button.classList.remove('recording');
+        button.textContent = 'Tap to Record';
+      }
+    }
 
-        // Translation Carousel
-        let currentIndex = 0;
-        let translations = [];
+    function showTranscription(result) {
+      document.getElementById('resultsContainer').style.display = 'block';
+      document.getElementById('inputLanguage').textContent = result.input_language;
+      document.getElementById('translatedLanguage').textContent = result.translated_language;
+      document.getElementById('inputText').textContent = result.input_text;
+      document.getElementById('translatedText').textContent = result.translated_text;
+    }
 
-        async function fetchTranslations() {
-            try {
-                const response = await fetch('/random-translations');
-                translations = await response.json();
-                if (translations.length > 0) {
-                    updateTranslation();
-                    setInterval(updateTranslation, 30000); // Update every 30 seconds
-                } else {
-                    document.getElementById('random-translation').innerText = 'No translations found.';
-                }
-            } catch (error) {
-                console.error('Error fetching translations:', error);
-                document.getElementById('random-translation').innerText = 'Error loading translations.';
-            }
+    function playSoundFromResult(type) {
+      const langMap = {
+        "English": "en",
+        "German": "de"
+      };
+
+      const text = type === 'input'
+        ? document.getElementById('inputText').textContent
+        : document.getElementById('translatedText').textContent;
+
+      const language = type === 'input'
+        ? document.getElementById('inputLanguage').textContent
+        : document.getElementById('translatedLanguage').textContent;
+
+      const mappedLang = langMap[language] || language;
+      const params = new URLSearchParams({ text, language: mappedLang });
+
+      fetch('/synthesize?' + params.toString())
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to fetch audio.");
+          return response.blob();
+        })
+        .then(blob => {
+          const audioURL = URL.createObjectURL(blob);
+          const audio = new Audio(audioURL);
+          audio.play();
+        })
+        .catch(error => {
+          console.error('Audio error:', error);
+          alert("Audio playback failed.");
+        });
+    }
+
+    // Translation Carousel
+    let currentIndex = 0;
+    let translations = [];
+
+    async function fetchTranslations() {
+      try {
+        const response = await fetch('/random-translations');
+        translations = await response.json();
+        if (translations.length > 0) {
+          updateTranslation();
+          setInterval(updateTranslation, 30000); // Update every 30s
+        } else {
+          document.getElementById('random-translation').innerText = 'No translations found.';
         }
+      } catch (error) {
+        console.error('Error fetching translations:', error);
+        document.getElementById('random-translation').innerText = 'Error loading translations.';
+      }
+    }
 
-        function updateTranslation() {
-            const entry = translations[currentIndex];
-            const text = `<span class="english-word">${entry.english}</span><br><span class="german-word">${entry.german}</span>`;
-            const el = document.getElementById('random-translation');
-            el.style.opacity = 0;
-            setTimeout(() => {
-                el.innerHTML = text;
-                el.style.opacity = 1;
-            }, 300);
-            currentIndex = (currentIndex + 1) % translations.length;
-        }
+    function updateTranslation() {
+      const entry = translations[currentIndex];
+      const text = `<span class="english-word">${entry.english}</span><br><span class="german-word">${entry.german}</span>`;
+      const el = document.getElementById('random-translation');
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.innerHTML = text;
+        el.style.opacity = 1;
+      }, 300);
+      currentIndex = (currentIndex + 1) % translations.length;
+    }
 
-        fetchTranslations();
-
-        // Play Sound Function
-        function playSound(text, language) {
-            const langMap = {
-                "English": "en",
-                "German": "de"
-            };
-
-            const mappedLang = langMap[language] || language;
-            const params = new URLSearchParams({ text, language: mappedLang });
-
-            fetch('/synthesize?' + params.toString())
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch audio.");
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    const audioURL = URL.createObjectURL(blob);
-                    const audio = new Audio(audioURL);
-                    audio.play();
-                })
-                .catch(error => {
-                    console.error('Audio error:', error);
-                    alert("Audio playback failed.");
-                });
-        }
-    </script>
-    </script>
+    fetchTranslations();
+  </script>
 </body>
 </html>
