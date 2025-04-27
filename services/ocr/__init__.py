@@ -1,0 +1,1 @@
+from .ocr import scan_and_translate

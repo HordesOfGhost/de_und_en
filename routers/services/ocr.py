@@ -1,6 +1,6 @@
 from fastapi import UploadFile, Form, File, APIRouter, Request
 from fastapi.responses import JSONResponse, HTMLResponse
-# from services.ocr import process_image
+from services.ocr import scan_and_translate
 
 from routers.config import templates
 import random
@@ -16,11 +16,9 @@ async def upload_image(
     file: UploadFile = File(...),
     direction: str = Form(...)
 ):
-    # original_base64, translated_base64 = process_image(file, direction)
-    original_base64, translated_base64 = "",""
-
-
+    img_bytes = await file.read()
+    original_image, translated_image = scan_and_translate(img_bytes, direction)
     return JSONResponse(content={
-        "original_image": original_base64,
-        "translated_image": translated_base64
+        "original_image": original_image,
+        "translated_image": translated_image
     })

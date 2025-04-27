@@ -1,143 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload or Capture</title>
-    <!-- Link to the external CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', path='ocr.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Upload and Translate</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='ocr.css') }}">
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+    }
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 90%;
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 35px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .result-images {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+    .image-container img {
+      max-width: 300px;
+      cursor: pointer;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Image Upload or Capture</h1>
-    <div class="page-wrapper">
-        <div class="card">
-            <div class="container">
-                <!-- Upload Image Form -->
-                <form id="upload-form" action="/ocr" enctype="multipart/form-data" method="post">
-                    <div class="form-group">
-                        <label for="file">Choose an image to upload:</label>
-                        <input type="file" id="file" name="file" class="input-file" accept="image/*">
-                        <select id="direction-upload" name="direction">
-                            <option value="en_to_de">English to German</option>
-                            <option value="de_to_en">German to English</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="button">Upload Image</button>
-                </form>
+  <h1>Upload Image for OCR and Translation</h1>
 
-                <hr class="divider">
+  <div class="page-wrapper">
+    <div class="card">
+      <div class="container">
 
-                <!-- Capture Image Section -->
-                <div class="capture-section">
-                    <label>Capture Image:</label>
-                    <video id="video" width="320" height="240" autoplay style="display:none;"></video>
-                    <button id="enable-camera" class="button">Take Photo</button>
-                    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
-                    <div id="captured-photo-overlay" style="display:none;">
-                        <img id="captured-photo" src="" alt="Captured Photo" style="width: 320px; height: 240px;">
-                    </div>
-                    <button id="snap" class="button" style="display:none;">Capture Photo</button>
-                    <button id="retake" class="button" style="display:none;">Retake Photo</button>
-                    <form id="capture-form" action="/ocr" enctype="multipart/form-data" method="post">
-                        <input type="file" id="captured-file" name="file" style="display:none;">
-                        <select id="direction-capture" name="direction">
-                            <option value="en_to_de">English to German</option>
-                            <option value="de_to_en">German to English</option>
-                        </select>
-                        <input type="submit" value="Upload Captured Photo" class="button" id="upload-captured" style="display:none;">
-                    </form>
-                </div>
-                <div class="centered-link">
-                    <a href="/">⬅ Back</a>
-                </div>
+        <!-- Upload Form -->
+        <form id="upload-form" action="/ocr" enctype="multipart/form-data" method="post">
+          <div class="form-group">
+            <label for="file">Choose an image to upload:</label>
+            <input type="file" id="file" name="file" class="input-file" accept="image/*" required>
+            <select id="direction-upload" name="direction">
+              <option value="en_to_de">English to German</option>
+              <option value="de_to_en">German to English</option>
+            </select>
+          </div>
+          <button type="submit" class="button">Scan and Translate</button>
+        </form>
 
-                <!-- Result Section -->
-                <div id="result-section" style="display:none;">
-                    <h3>Results:</h3>
-                    <div>
-                        <h4>Original Image</h4>
-                        <img id="original-img" src="" alt="Original Image" style="max-width: 100%; height: auto;">
-                    </div>
-                    <div>
-                        <h4>Translated Image</h4>
-                        <img id="translated-img" src="" alt="Translated Image" style="max-width: 100%; height: auto;">
-                    </div>
-                </div>
+        <!-- Result Section -->
+        <div id="result-section" style="display:none;">
+          <div class="result-images">
+            <div class="image-container">
+              <h4>Original Image</h4>
+              <img id="original-img" src="" alt="Original Image">
             </div>
+            <div class="image-container">
+              <h4>Translated Image</h4>
+              <img id="translated-img" src="" alt="Translated Image">
+            </div>
+          </div>
         </div>
+
+        <div class="centered-link">
+          <a href="/">⬅ Back</a>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const captureButton = document.getElementById('snap'); // Capture button
-        const retakeButton = document.getElementById('retake'); // Retake button
-        const enableCameraButton = document.getElementById('enable-camera'); // Take photo button
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const capturedPhotoOverlay = document.getElementById('captured-photo-overlay');
-        const capturedPhoto = document.getElementById('captured-photo');
-        const capturedFileInput = document.getElementById('captured-file');
-        const uploadCapturedButton = document.getElementById('upload-captured');
-        let stream = null;
+  <!-- Image Preview Modal -->
+  <div id="image-modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modal-img">
+  </div>
 
-        // Start Camera when "Take Photo" button is clicked
-        enableCameraButton.addEventListener("click", async () => {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-                video.style.display = "block";
-                enableCameraButton.style.display = "none"; // Hide the Take Photo button
-                captureButton.style.display = "inline-block"; // Show Capture button
-            } catch (err) {
-                alert("Unable to access camera. Please check your permissions.");
-            }
+  <script>
+    document.getElementById("upload-form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch("/ocr", {
+          method: "POST",
+          body: formData,
         });
 
-        // Capture photo
-        captureButton.addEventListener("click", () => {
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const result = await response.json();
 
-            canvas.toBlob(blob => {
-                const file = new File([blob], "captured.png", { type: "image/png" });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                capturedFileInput.files = dataTransfer.files;
-                capturedPhoto.src = URL.createObjectURL(file);
+        document.getElementById("original-img").src = `data:image/png;base64,${result.original_image}`;
+        document.getElementById("translated-img").src = `data:image/png;base64,${result.translated_image}`;
+        document.getElementById("result-section").style.display = "block";
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    });
 
-                // Stop camera after capturing
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    video.srcObject = null;
-                }
+    // Modal functionality
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
+    const closeModal = document.getElementsByClassName('close')[0];
 
-                // Hide video and show captured photo overlay
-                video.style.display = "none";
-                capturedPhotoOverlay.style.display = "block"; 
-
-                // Show retake button and upload captured photo button
-                retakeButton.style.display = "inline-block";
-                uploadCapturedButton.style.display = "inline-block";
-                captureButton.style.display = "none"; // Hide capture button
-            });
-        });
-
-        // Retake photo
-        retakeButton.addEventListener("click", async () => {
-            // Restart camera
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-                video.style.display = "block";
-                capturedPhotoOverlay.style.display = "none"; // Hide captured photo
-                captureButton.style.display = "inline-block"; // Show capture button again
-                retakeButton.style.display = "none"; // Hide retake button
-                uploadCapturedButton.style.display = "none"; // Hide upload button
-            } catch (err) {
-                alert("Unable to access camera. Please check your permissions.");
-            }
-        });
-    </script>
+    document.getElementById('original-img').onclick = function() {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+    document.getElementById('translated-img').onclick = function() {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+    closeModal.onclick = function() {
+      modal.style.display = "none";
+    }
+    modal.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>
