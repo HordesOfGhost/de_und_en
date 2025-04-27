@@ -24,8 +24,11 @@ body {
     margin-bottom: 40px;
 }
 
-h2 {
-    margin-bottom: 20px;
+h1 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 form {
@@ -42,7 +45,7 @@ input[type="text"] {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 10px;
@@ -52,7 +55,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
 }
 
 .centered-link {

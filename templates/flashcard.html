@@ -10,11 +10,9 @@
 <body>
     <div class="container">
         <h1>Flashcard</h1>
-        
-
+    
         <div class="card">
             <form method="get" action="/flashcard" class="direction-form">
-                <label for="direction">Direction:</label><br>
                 <select name="direction" id="direction" onchange="this.form.submit()">
                     <option value="en_to_de" {% if direction == 'en_to_de' %}selected{% endif %}>English to German</option>
                     <option value="de_to_en" {% if direction == 'de_to_en' %}selected{% endif %}>German to English</option>

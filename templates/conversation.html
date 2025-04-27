@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', path='conversation.css') }}">
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="card">
-            <h2>🗣️ Generate or Retrieve a Conversation</h2>
+    <h1>Generate or Retrieve a Conversation</h1>
 
+    <div class="page-wrapper">
+        <div class="card">        
             <!-- 🔹 Generate form -->
             <form id="conversation-form" method="post" action="/conversation">
                 <div class="form-group">
@@ -29,7 +29,7 @@
             <!-- 🔹 Retrieve form -->
             <form id="retrieve-form">
                 <div class="form-group">
-                    <label for="conversation-id">Or Retrieve by ID:</label>
+                    <label for="conversation-id">Retrieve by ID:</label>
                     <input type="number" id="conversation-id" name="conversation_id" placeholder="e.g., 3" required />
                 </div>
                 <button type="submit">Retrieve</button>
