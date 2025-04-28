@@ -12,5 +12,5 @@ def translate_conversation_and_save_with_gemini(input_text: str, db: Session):
         english=input_text,
         german=translated_text
     )
-    saved_translation = save_conversation(db, translation_data)
-    return translated_text, saved_translation
+    saved_conversation = save_conversation(db, translation_data)
+    return translated_text, saved_conversation

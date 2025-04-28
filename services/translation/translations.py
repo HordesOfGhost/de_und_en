@@ -21,7 +21,7 @@ def translate_translation_and_save_with_madlad(input_text: str, direction: str, 
         german=translated_text if direction == "en_to_de" else input_text
     )
     saved_translation = save_translation(db, translation_data)
-    return translated_text, saved_translation
+    return translated_text, saved_translation.id
 
 def translate_translation_and_save_with_gemini(input_text: str, direction: str, db: Session):
 
@@ -39,5 +39,5 @@ def translate_translation_and_save_with_gemini(input_text: str, direction: str, 
         german=translated_text if direction == "en_to_de" else input_text
     )
     saved_translation = save_translation(db, translation_data)
-    return translated_text, saved_translation
+    return translated_text, saved_translation.id
 
