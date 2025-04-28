@@ -22,16 +22,15 @@ app.mount(
     name="static",
 )
 
-
-app.include_router(events.router)
-app.include_router(landing.router)
 app.include_router(translate.router)
 app.include_router(transcribe.router)
+app.include_router(events.router)
 app.include_router(flashcards.router)
 app.include_router(synthesize.router)
 app.include_router(conversation.router)
-app.include_router(api.router)
 app.include_router(ocr.router)
+app.include_router(landing.router)
+app.include_router(api.router)
 
 
 
