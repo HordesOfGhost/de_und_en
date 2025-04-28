@@ -11,10 +11,10 @@ router = APIRouter()
 async def upload_or_capture_image(request: Request):
     return templates.TemplateResponse("ocr.html", {"request": request})
 
-@router.post("/ocr")
+@router.post("/ocr", tags=['ocr'])
 async def upload_image(
     file: UploadFile = File(...),
-    direction: str = Form(...)
+    direction: str = Form("de_to_en")
 ):
     img_bytes = await file.read()
     original_image, translated_image = scan_and_translate(img_bytes, direction)

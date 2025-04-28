@@ -16,9 +16,10 @@ async def translation_page(request: Request, direction: str = "en_to_de"):
     })
 
 @router.post("/translate", tags=['translate'])
-async def translate_json(input_text: str = Form(...), direction: str = Form("en_to_de"), db: Session = Depends(get_db)):
-    translated_text, saved_translation = translate_translation_and_save_with_gemini(input_text, direction, db)
-    return JSONResponse(content={
+async def translate(input_text: str = Form(...), direction: str = Form("en_to_de"), db: Session = Depends(get_db)):
+    translated_text, record_id = translate_translation_and_save_with_gemini(input_text, direction, db)
+    return JSONResponse({
+        "id": record_id,
         "input_text": input_text,
         "translated_text": translated_text,
         "input_language": "English" if direction == "en_to_de" else "German",

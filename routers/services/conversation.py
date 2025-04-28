@@ -17,10 +17,11 @@ async def generate_conversations(
     topic: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    eng_conversation, de_conversation = generate_conversation_translate_and_save(topic, db)
+    eng_conversation, de_conversation, record_id = generate_conversation_translate_and_save(topic, db)
     
     # Return the conversations as JSON
-    return JSONResponse(content={
+    return JSONResponse({
+        "id": record_id,
         "topic": topic,
         "english": eng_conversation,
         "german": de_conversation
