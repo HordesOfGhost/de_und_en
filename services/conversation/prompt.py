@@ -1,6 +1,11 @@
 prompt_template_for_conversation_generation = '''
     Create a natural-sounding conversation between two or more people about {}.
     Use realistic, everyday language with a smooth, dynamic flow.
+    
+    Instructions:
+    - Do not include any introductory or concluding remarks.
+    - Do not say things like "I understand the task" or "I hope this helps".
+    
     Vary the use of:
     - **Nouns** (common, proper, abstract, collective) to add variety and context.
     - **Pronouns** (he, she, they, them, etc.), ensuring a balance of gender-neutral and diverse pronouns throughout.
@@ -21,6 +26,6 @@ prompt_template_for_conversation_generation = '''
 
     The conversation should feel spontaneous and natural, with varied pacing, incorporating different grammatical structures to make it engaging and dynamic. Include a mix of simple and complex sentences, varied tones (e.g., excited, thoughtful, casual), and occasional shifts in perspective or tense.
 
-    Only provide the conversation—no explanations or descriptions needed and dont use *(aesterisks) in conversations.
+    Only provide the conversation—no explanations or descriptions needed.
     Write the character's name first, followed by their dialogue. Ensure the character's name are gender-neutral.
 '''

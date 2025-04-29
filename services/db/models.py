@@ -31,7 +31,7 @@ class Grammar(Base):
     __tablename__ = "grammar"
 
     id = Column(Integer, primary_key=True, index=True)
-    german = Column(String, nullable=False)
+    german = Column(String, unique=True, nullable=False)
     grammar_explanations = Column(String, nullable=False)
 
 def get_db():
