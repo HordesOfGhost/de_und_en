@@ -10,7 +10,12 @@ from routers.services import (
     grammar,
 )
 from routers.events import events
-from routers.crud import api
+from routers.crud import (
+    create,
+    read,
+    update,
+    delete
+)
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
@@ -32,7 +37,11 @@ app.include_router(conversation.router)
 app.include_router(grammar.router)
 app.include_router(ocr.router)
 app.include_router(landing.router)
-app.include_router(api.router)
+app.include_router(create.router)
+app.include_router(read.router)
+app.include_router(update.router)
+app.include_router(delete.router)
+
 
 
 
