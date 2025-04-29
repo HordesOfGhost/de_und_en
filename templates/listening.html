@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Exercise</title>
+    <style>
+        .content-container {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .questions-container {
+            margin-top: 20px;
+        }
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            display: none;
+            margin-left: 20px;
+            font-style: italic;
+        }
+
+        .reveal-answer-button {
+            margin-left: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <h1>Listening Exercise</h1>
+    <form action="/listening" method="post">
+        <label for="level">Choose your level:</label>
+        <select name="level" id="level">
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+        </select>
+        <button type="submit">Generate Content</button>
+    </form>
+</div>
+
+{% if topic %}
+    <div class="content-container">
+        <h2>Topic: {{ topic }}</h2>
+        <p><strong>Article:</strong></p>
+        <p>{{ article }}</p>
+
+        <div class="questions-container">
+            <h3>Questions:</h3>
+            {% for item in questions_and_answers %}
+                <div class="question">
+                    <p>{{ item['question'] }}</p>
+                    <button class="reveal-answer-button" onclick="toggleAnswer(this)">Reveal Answer</button>
+                    <p class="answer">{{ item['answer'] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    function toggleAnswer(button) {
+        const answer = button.nextElementSibling;
+        if (answer.style.display === "none") {
+            answer.style.display = "block";
+        } else {
+            answer.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>

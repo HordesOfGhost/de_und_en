@@ -17,24 +17,24 @@
                     <option value="de_to_en">German to English</option>
                 </select>
                 <br>
-
                 <input type="text" name="input_text" id="input_text" placeholder="Enter your text" required>
                 <br>
                 <button type="submit">Translate</button>
             </form>
 
             <div id="translation-result" style="margin-top: 1em;">
-                <div>
+                
+                <div id="input-container" style="display: none;">
                     <h2 id="input-language-heading"></h2>
                     <p id="input-text-display" style="display: inline-flex; align-items: center; gap: 0.5em;"></p>
                 </div>
-                <div>
+                <div id="translated-container" style="display: none;">
                     <h2 id="translated-language-heading"></h2>
                     <p id="translated-text-display" style="display: inline-flex; align-items: center; gap: 0.5em;"></p>
                 </div>
 
                 <!-- Full German sentence input box -->
-                <div style="margin-top: 1em;">
+                <div    style="margin-top: 1em;">
                     <label for="full-german-sentence">Full German sentence:</label><br>
                     <input type="text" id="full-german-sentence" style="width: 100%; margin-top: 0.5em;">
                 </div>
@@ -47,6 +47,19 @@
                         <option value="all">All</option>
                     </select>
                 </div>
+
+                <!-- Submit Grammar Explanation -->
+                <div style="margin-top: 1em;">
+                    <button id="grammar-submit" type="button">Get Grammar Explanation</button>
+                </div>
+
+                <!-- Display Grammar Explanations -->
+                <div id="grammar-explanation-result">
+                    <h3>Grammar Explanation</h3>
+                    <p><strong>German Sentence:</strong> <span id="grammar-german-text"></span></p>
+                    <div id="grammar-explanations"></div>
+                </div>
+                
             </div>
 
             <div class="centered-link">
@@ -94,19 +107,13 @@
         fetchTranslations();
 
         function playSound(text, language) {
-            const langMap = {
-                "English": "en",
-                "German": "de"
-            };
-
+            const langMap = { "English": "en", "German": "de" };
             const mappedLang = langMap[language] || language;
             const params = new URLSearchParams({ text, language: mappedLang });
 
             fetch('/synthesize?' + params.toString())
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch audio.");
-                    }
+                    if (!response.ok) throw new Error("Failed to fetch audio.");
                     return response.blob();
                 })
                 .then(blob => {
@@ -122,7 +129,6 @@
 
         document.getElementById("translate-form").addEventListener("submit", async function (e) {
             e.preventDefault();
-
             const inputText = document.getElementById("input_text").value;
             const direction = document.getElementById("direction").value;
 
@@ -141,24 +147,22 @@
                 const data = await response.json();
 
                 document.getElementById("input-language-heading").textContent = data.input_language;
-                document.getElementById("input-text-display").innerHTML = ` 
-                    ${data.input_text} 
-                    <button onclick="playSound('${data.input_text}', '${data.input_language}')" title="Play Sound">🔊</button>
-                `;
+                document.getElementById("input-text-display").innerHTML = `${data.input_text} 
+                    <button onclick="playSound('${data.input_text}', '${data.input_language}')" title="Play Sound">🔊</button>`;
 
                 document.getElementById("translated-language-heading").textContent = data.translated_language;
-                document.getElementById("translated-text-display").innerHTML = ` 
-                    ${data.translated_text} 
-                    <button onclick="playSound('${data.translated_text}', '${data.translated_language}')" title="Play Sound">🔊</button>
-                `;
+                document.getElementById("translated-text-display").innerHTML = `${data.translated_text} 
+                    <button onclick="playSound('${data.translated_text}', '${data.translated_language}')" title="Play Sound">🔊</button>`;
+
+                // Show the containers after populating content
+                document.getElementById("input-container").style.display = "block";  // Show input container
+                document.getElementById("translated-container").style.display = "block";  // Show translated container
 
                 document.getElementById("translation-result").style.display = "block";
 
-                // Fetch full German sentence based on returned id
                 if (data.id) {
                     fetchFullGermanSentence(data.id);
                 }
-
             } catch (err) {
                 alert("Error: " + err.message);
                 console.error(err);
@@ -169,10 +173,9 @@
             try {
                 const response = await fetch("/records?table_name=translations");
                 if (!response.ok) throw new Error("Failed to fetch records.");
-
                 const records = await response.json();
-
                 const record = records.find(r => r.id === id);
+
                 if (record) {
                     const germanSentence = record.german;
                     document.getElementById("full-german-sentence").value = germanSentence;
@@ -187,17 +190,13 @@
         }
 
         function updateSentenceSelector(germanSentence) {
-            const sentenceArray = germanSentence.split(/[.!?]/).filter(Boolean);
+            const sentenceArray = germanSentence.match(/[^.!?]+[.!?]/g) || [];
             const sentenceCount = sentenceArray.length;
-
-            // Update sentence count and dropdown
             document.getElementById("sentence-count").innerText = `Sentence count: ${sentenceCount}`;
-            const sentenceSelector = document.getElementById("sentence-selector");
 
-            // Clear previous options
+            const sentenceSelector = document.getElementById("sentence-selector");
             sentenceSelector.innerHTML = '<option value="all">All</option>';
 
-            // Add sentence numbers to the dropdown
             for (let i = 0; i < sentenceCount; i++) {
                 const option = document.createElement("option");
                 option.value = i + 1;
@@ -205,22 +204,55 @@
                 sentenceSelector.appendChild(option);
             }
 
-            // Add an event listener to select multiple sentences
             sentenceSelector.addEventListener("change", function () {
-                const selectedValues = Array.from(sentenceSelector.selectedOptions).map(option => option.value);
+                const selectedValues = Array.from(sentenceSelector.selectedOptions).map(opt => opt.value);
                 let selectedText = '';
 
                 if (selectedValues.includes("all")) {
                     selectedText = germanSentence;
                 } else {
                     selectedValues.forEach(value => {
-                        selectedText += sentenceArray[value - 1].trim() + ". ";
+                        selectedText += sentenceArray[value - 1].trim() + " ";
                     });
                 }
 
                 document.getElementById("full-german-sentence").value = selectedText.trim();
+                document.getElementById("sentence-count").innerText = `Sentence count: ${sentenceArray.length}`;
             });
         }
+
+        document.getElementById("full-german-sentence").addEventListener("input", function () {
+            const updatedText = this.value;
+            updateSentenceSelector(updatedText);
+        });
+
+        document.getElementById("grammar-submit").addEventListener("click", async () => {
+            const germanSentence = document.getElementById("full-german-sentence").value;
+            if (!germanSentence.trim()) {
+                alert("Please enter a German sentence.");
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append("german_sentences", germanSentence);
+
+                const response = await fetch("/grammar", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch grammar explanation.");
+                const data = await response.json();
+
+                document.getElementById("grammar-german-text").textContent = data.german;
+                document.getElementById("grammar-explanations").innerHTML = data.grammar_explanations;
+                document.getElementById("grammar-explanation-result").style.display = "block";
+            } catch (err) {
+                console.error("Grammar explanation error:", err);
+                alert("Error fetching grammar explanation.");
+            }
+        });
     </script>
 </body>
 </html>
