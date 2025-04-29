@@ -1,22 +1,17 @@
-import numpy as np
-from io import BytesIO
+import os
+from pathlib import Path
 from services.models import whisper_model
-from pydub import AudioSegment
-import torch
 
-def transcribe_audio(audio_bytes, language: str):
-    audio_file = BytesIO(audio_bytes)
-
-    audio = AudioSegment.from_file(audio_file, format="m4a")
-    audio = audio.set_frame_rate(16000).set_channels(1)
-    samples = np.array(audio.get_array_of_samples()).astype(np.float32) / 32768.0
-
-    waveform = torch.from_numpy(samples)
-
-    if waveform.ndim > 1:
-        waveform = waveform.mean(dim=0)
-
-    result = whisper_model.transcribe(waveform, language=language)
-    transcribed_text = result["text"]
+def transcribe_audio(audio_bytes: bytes, language: str) -> str:
+    wav_file_path = Path("temp_audio.wav")
     
-    return transcribed_text
+    try:
+        with wav_file_path.open("wb") as f:
+            f.write(audio_bytes)
+
+        result = whisper_model.transcribe(str(wav_file_path), language=language)
+        return result["text"]
+    finally:
+        
+        if wav_file_path.exists():
+            wav_file_path.unlink()

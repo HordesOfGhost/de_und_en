@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 class GrammarModel(BaseModel):
-    english: str
     german: str
     grammar_explanations: str
 

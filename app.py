@@ -7,6 +7,7 @@ from routers.services import (
     conversation,
     landing,
     ocr,
+    grammar,
 )
 from routers.events import events
 from routers.crud import api
@@ -28,6 +29,7 @@ app.include_router(events.router)
 app.include_router(flashcards.router)
 app.include_router(synthesize.router)
 app.include_router(conversation.router)
+app.include_router(grammar.router)
 app.include_router(ocr.router)
 app.include_router(landing.router)
 app.include_router(api.router)
