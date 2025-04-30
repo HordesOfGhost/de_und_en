@@ -8,6 +8,8 @@ from routers.services import (
     landing,
     ocr,
     grammar,
+    reading,
+    listening
 )
 from routers.events import events
 from routers.crud import (
@@ -41,6 +43,10 @@ app.include_router(create.router)
 app.include_router(read.router)
 app.include_router(update.router)
 app.include_router(delete.router)
+app.include_router(reading.router)
+app.include_router(listening.router)
+
+
 
 
 

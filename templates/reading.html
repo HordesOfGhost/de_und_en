@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-    <h1>German Listening Practice</h1>
+    <h1>German Reading Practice</h1>
 
     <form id="levelForm">
         <label for="level">Choose Level (A1–C2): </label>
@@ -77,7 +77,7 @@
             e.preventDefault();
             evaluationDiv.style.display = "none";
             const formData = new FormData(form);
-            const response = await fetch("/listening", {
+            const response = await fetch("/reading", {
                 method: "POST",
                 body: formData
             });
@@ -98,9 +98,7 @@
 
             contentDiv.innerHTML = `
                 <h2>Topic: ${topic}</h2>
-                <div class="article-box">
-                    <button type="button" onclick="playAudio('${escapedArticle}', 'de')">Play Article Audio</button>
-                </div>
+                <div class="article-box"><strong>Artikel:</strong><br>${article.replace(/\n/g, "<br>")}</div>
                 <h3>Fragen:</h3>
                 <form id="answerForm">
                     <input type="hidden" name="article" value="${escapedArticle}">
@@ -118,19 +116,6 @@
             `;
         }
 
-        function playAudio(text, language) {
-            fetch(`/synthesize?text=${encodeURIComponent(text)}&language=${language}`)
-                .then(response => response.blob())
-                .then(blob => {
-                    const audio = new Audio(URL.createObjectURL(blob));
-                    audio.play();
-                })
-                .catch(error => {
-                    console.error('Error playing audio:', error);
-                    alert("Error loading audio.");
-                });
-        }
-
         function showAnswers() {
             const answers = document.querySelectorAll(".answer");
             answers.forEach(el => el.style.display = "block");
@@ -145,7 +130,7 @@
                 formData.append("questions_and_answers", JSON.stringify(qa));
             });
 
-            fetch("/submit-listening-answers", {
+            fetch("/submit-reading-answers", {
                 method: "POST",
                 body: formData
             })
