@@ -2,8 +2,11 @@ from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
 from routers.config import templates
 from fastapi.templating import Jinja2Templates
-from services.reading.read import generate_reading_content
+from services.reading.read import generate_reading_content_and_save_metadata
 from services.reading.evaluate import evaluate_reading_answers
+from sqlalchemy.orm import Session
+from services.db import get_db
+
 import json
 router = APIRouter()
 
@@ -14,8 +17,8 @@ async def get_reading_page(request: Request):
     return templates.TemplateResponse("reading.html", {"request": request})
 
 @router.post("/reading", tags=['reading'], response_class=JSONResponse)
-async def get_reading_contents(level: str=Form("A1")):
-    json_data = generate_reading_content(level)
+async def get_reading_contents(level: str=Form("A1"), db: Session= Depends(get_db)):
+    json_data = generate_reading_content_and_save_metadata(level, db)
     return JSONResponse({
         "level":json_data['level'],
         "topic":json_data['topic'],

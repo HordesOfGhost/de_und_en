@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
-from .models import Translation, Conversation, Grammar
+from .models import Translation, Conversation, Grammar, ListeningMetaData, ReadingMetaData
 from schemas.translation import TranslationModel
 from schemas.conversation import  ConversationModel
 from schemas.grammar import  GrammarModel
+from schemas.metadata import ReadingMetaDataModel, ListeningMetaDataModel
+
 
 def save_translation(db: Session, translation_data: TranslationModel):
     
@@ -56,3 +58,44 @@ def save_grammar_explanation(db: Session, grammar_explanations_data: GrammarMode
     db.commit()
     db.refresh(grammar_explanation)
     return grammar_explanation
+
+def save_reading_metadata(db: Session, reading_metadata_data: ReadingMetaDataModel):
+
+    existing_reading_metadata = db.query(ReadingMetaData).filter_by(
+        level=reading_metadata_data.level,
+        topic=reading_metadata_data.topic
+    ).first()
+
+    if existing_reading_metadata:
+        return existing_reading_metadata
+    
+    reading_metadata = ReadingMetaData(
+        level=reading_metadata_data.level,
+        topic=reading_metadata_data.topic
+    )
+
+    db.add(reading_metadata)
+    db.commit()
+    db.refresh(reading_metadata)
+    return reading_metadata
+
+def save_listening_metadata(db: Session, listening_metadata_data: ListeningMetaDataModel):
+
+    existing_listening_metadata = db.query(ListeningMetaData).filter_by(
+        level=listening_metadata_data.level,
+        topic=listening_metadata_data.topic
+    ).first()
+
+    if existing_listening_metadata:
+        return existing_listening_metadata
+    
+    listening_metadata = ListeningMetaData(
+        level=listening_metadata_data.level,
+        topic=listening_metadata_data.topic
+    )
+
+    db.add(listening_metadata)
+    db.commit()
+    db.refresh(listening_metadata)
+    return listening_metadata
+

@@ -109,10 +109,12 @@
                         <div class="question">
                             <label>${q.question}</label><br>
                             <input type="text" name="user_answers" style="width: 100%;" /><br>
+                            <button type="button" onclick="toggleAnswer(${i}, this)">Show Answer</button>
                             <div class="answer" id="answer${i}">Antwort: ${q.answer}</div>
                         </div>
                     `).join("")}
-                    <button type="button" onclick="showAnswers()">Show Answers</button>
+
+
                     <button type="button" onclick="submitAnswers()">Submit My Answers</button>
                 </form>
             `;
@@ -131,9 +133,22 @@
                 });
         }
 
-        function showAnswers() {
-            const answers = document.querySelectorAll(".answer");
-            answers.forEach(el => el.style.display = "block");
+        function showAnswer(index) {
+            const answerDiv = document.getElementById(`answer${index}`);
+            if (answerDiv) {
+                answerDiv.style.display = "block";
+            }
+        }
+
+        function toggleAnswer(index, button) {
+            const answerDiv = document.getElementById(`answer${index}`);
+            if (answerDiv.style.display === "block") {
+                answerDiv.style.display = "none";
+                button.textContent = "Show Answer";
+            } else {
+                answerDiv.style.display = "block";
+                button.textContent = "Hide Answer";
+            }
         }
 
         function submitAnswers() {

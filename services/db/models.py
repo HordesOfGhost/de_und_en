@@ -34,6 +34,20 @@ class Grammar(Base):
     german = Column(String, unique=True, nullable=False)
     grammar_explanations = Column(String, nullable=False)
 
+class ReadingMetaData(Base):
+    __tablename__ = "reading_metadata"
+
+    id = Column(Integer, primary_key=True, index=True)
+    level = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+
+class ListeningMetaData(Base):
+    __tablename__ = "listening_metadata"
+
+    id = Column(Integer, primary_key=True, index=True)
+    level = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+
 def get_db():
     db = SessionLocal()
     try:

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
 from routers.config import templates
 from fastapi.templating import Jinja2Templates
-from services.listening.listen import generate_listening_content
+from services.listening.listen import generate_listening_content_and_save_metadata
 from services.listening.evaluate import evaluate_listening_answers
 import json
 router = APIRouter()
@@ -15,7 +15,7 @@ async def get_listening_page(request: Request):
 
 @router.post("/listening", tags=['listening'], response_class=JSONResponse)
 async def get_listening_contents(level: str=Form("A1")):
-    json_data = generate_listening_content(level)
+    json_data = generate_listening_content_and_save_metadata(level)
     return JSONResponse({
         "level":json_data['level'],
         "topic":json_data['topic'],
