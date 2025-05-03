@@ -65,12 +65,12 @@ async def synthesize_conversations(request: Request):
     Receives a JSON body with a conversation (list of sentences) and optional language.
     Synthesizes the conversation into speech and returns it as an audio file.
 
-    Parameters:
+    Parameters
     -----------
     request : Request
         The incoming HTTP request, containing a JSON body with the conversation and language.
 
-    Returns:
+    Returns
     --------
     Response
         The synthesized conversation as a .wav audio file.

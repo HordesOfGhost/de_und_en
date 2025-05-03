@@ -21,12 +21,12 @@ async def render_writing_page(request: Request):
     """
     Serve the writing page.
 
-    Parameters:
+    Parameters
     -----------
     request: Request
         The request object containing the incoming request.
     
-    Returns:
+    Returns
     --------
     HTMLResponse
         The rendered HTML template for the writing page.
@@ -38,14 +38,14 @@ async def get_writing_topic(level: str = Form(...), db: Session = Depends(get_db
     """
     Generate a writing topic based on the selected level.
 
-    Parameters:
+    Parameters
     -----------
     level: str
         The selected level for the writing topic (e.g., A1, B1, C1).
     db: Session
         The database session injected via dependency.
 
-    Returns:
+    Returns
     --------
     JSONResponse
         A JSON response containing the generated writing topic or an error message.
@@ -69,7 +69,7 @@ async def submit_evaluate_and_save_writing(
     """
     Submit the writing content, evaluate it, and save the result.
 
-    Parameters:
+    Parameters
     -----------
     level: str
         The selected writing level (e.g., A1, B1, C1).
@@ -80,7 +80,7 @@ async def submit_evaluate_and_save_writing(
     db: Session
         The database session injected via dependency.
 
-    Returns:
+    Returns
     --------
     JSONResponse
         A JSON response containing the evaluation score, explanation, and other details.
