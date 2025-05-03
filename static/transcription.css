@@ -110,9 +110,15 @@ footer p {
     font-size: 1rem;
     color: #007bff;
 }
-.centered-link {
-    text-align: center;
-    margin-top: 2rem; /* Optional margin */
+
+.centered-link a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.centered-link a:hover {
+    text-decoration: underline;
 }
 #recordButton.recording {
     background-color: red;

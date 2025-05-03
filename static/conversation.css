@@ -58,14 +58,14 @@ button:hover {
     background-color: #0056b3;
 }
 
-.centered-link {
-    margin-top: 20px;
-}
-
 .centered-link a {
     text-decoration: none;
-    color: #007BFF;
+    color: #007bff;
     font-weight: bold;
+}
+
+.centered-link a:hover {
+    text-decoration: underline;
 }
 
 #loading-message {

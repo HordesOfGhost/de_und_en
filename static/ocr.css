@@ -108,10 +108,14 @@ video, canvas {
     border-radius: 8px;
 }
 
+.centered-link a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
 
-.centered-link {
-    text-align: center;
-    margin-top: 2rem; /* Optional margin */
+.centered-link a:hover {
+    text-decoration: underline;
 }
 .modal {
     display: none;

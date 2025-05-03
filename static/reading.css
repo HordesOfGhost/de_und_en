@@ -144,7 +144,13 @@ form button:active {
     font-size: 1.2rem;
     text-align: center;
 }
-.centered-link {
-    text-align: center;
-    margin-top: 2rem; /* Optional margin */
+
+.centered-link a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.centered-link a:hover {
+    text-decoration: underline;
 }

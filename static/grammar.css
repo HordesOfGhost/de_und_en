@@ -109,20 +109,17 @@ footer {
     color: #333;
 }
 
-.centered-link {
-    text-align: center;
-    margin-top: 2rem;
-}
 
 .centered-link a {
-    color: #007bff;
     text-decoration: none;
-    font-weight: 500;
+    color: #007bff;
+    font-weight: bold;
 }
 
 .centered-link a:hover {
     text-decoration: underline;
 }
+
 #full-german-sentence,
 #sentence-selector {
     padding: 10px;

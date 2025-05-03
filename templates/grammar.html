@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Translate</title>
+    <title>Explain Grammar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='grammar.css') }}">
 </head>
 <body>
     <main>
-        <h1>Translation</h1>
+        <h1>Explain Grammar</h1>
         <div class="container">
             <form id="translate-form">
                 <label for="direction">Select translation direction:</label><br>
@@ -36,7 +36,7 @@
                 <!-- Full German sentence input box -->
                 <div    style="margin-top: 1em;">
                     <label for="full-german-sentence">Full German sentence:</label><br>
-                    <input type="text" id="full-german-sentence" style="width: 100%; margin-top: 0.5em;">
+                    <input type="text" id="full-german-sentence" style="width: 100%; margin-top: 0.5em;" placeholder="You can just type German Sentence or Use Translate service to get German Sentences">
                 </div>
 
                 <!-- Sentence Counter -->
