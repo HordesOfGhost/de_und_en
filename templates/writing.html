@@ -3,66 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>German Writing Practice</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f4;
-        }
-        .box {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        select, button, textarea {
-            padding: 10px;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', path='writing.css') }}">
 </head>
 <body>
 
-    <h1>German Writing Practice</h1>
+    <div class="card">
+        <h1>German Writing Practice</h1>
 
-    <form id="levelForm">
-        <label for="level">Wähle dein Niveau (A1–C2): </label>
-        <select name="level" id="level" required>
-            <option value="">-- Wählen --</option>
-            <option value="A1">A1</option>
-            <option value="A2">A2</option>
-            <option value="B1">B1</option>
-            <option value="B2">B2</option>
-            <option value="C1">C1</option>
-            <option value="C2">C2</option>
-        </select>
-        <button type="submit">Thema generieren</button>
-    </form>
+        <form id="levelForm">
+            <select name="level" id="level" required>
+                <option value="">-- Wähle dein Niveau (A1–C2): --</option>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+                <option value="C1">C1</option>
+                <option value="C2">C2</option>
+            </select>
+            <button type="submit">Thema generieren</button>
+        </form>
+        <div class="centered-link">
+            <a href="/">⬅ Back</a>
+        </div>
 
-    <div id="writingBox" class="box" style="display: none;">
-        <h2 id="topicTitle"></h2>
-        <label for="userText">Schreibe über dieses Thema:</label>
-        <textarea id="userText" placeholder="Schreibe deinen Text hier..."></textarea>
-        <br>
-        <button onclick="submitWriting()">Absenden</button>
-    </div>
+        <input type="hidden" id="hiddenLevel" name="level">
+        <input type="hidden" id="hiddenTopic" name="topic">
 
-    <!-- Hidden inputs to pass level and topic -->
-    <input type="hidden" id="hiddenLevel" name="level">
-    <input type="hidden" id="hiddenTopic" name="topic">
+        <div id="writingBox" class="hidden">
+            <h2 id="topicTitle"></h2>   
+            <textarea id="userText" placeholder="Schreibe deinen Text hier..."></textarea>
+            <br>
+            <button onclick="submitWriting()">Absenden</button>
+            <button type="button" class="clear-button" onclick="clearText()">Löschen</button> <!-- Clear button -->
+        </div>
 
-    <!-- Evaluation Result Display -->
-    <div id="evaluationResult" class="box" style="display: none;">
-        <h3>Bewertung</h3>
-        <p><strong>Score:</strong> <span id="score"></span></p>
-        <p><strong>Evaluation:</strong></p>
-        <p id="evaluationText"></p>
+        <div id="evaluationResult" class="evaluation-box hidden">
+            <h3>Bewertung</h3>
+            <p><strong>Score:</strong> <span id="score"></span></p>
+            <p><strong>Evaluation:</strong></p>
+            <p id="evaluationText"></p>
+        </div>
     </div>
 
     <script>
@@ -82,6 +62,7 @@
                 const data = await response.json();
                 topicTitle.textContent = `Thema: ${data.topic}`;
                 writingBox.style.display = "block";
+                document.getElementById("evaluationResult").style.display = "none"; // Hide evaluation results if topic is generated
 
                 // Store hidden level and topic for submission
                 document.getElementById("hiddenLevel").value = data.level;
@@ -111,9 +92,14 @@
                 document.getElementById("score").textContent = result.score;
                 document.getElementById("evaluationText").textContent = result.evaluation;
                 document.getElementById("evaluationResult").style.display = "block";
+                writingBox.style.display = "block"; // Keep the writing box visible after submission
             } else {
-                alert("Fehler bei d er Bewertung.");
+                alert("Fehler bei der Bewertung.");
             }
+        }
+
+        function clearText() {
+            document.getElementById("userText").value = ''; // Clear the textarea content
         }
     </script>
 </body>

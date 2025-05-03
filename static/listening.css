@@ -1,0 +1,174 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f8;
+}
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+h1 {
+    text-align: center;
+    color: #007bff;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.center-card {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+
+form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+form select, form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+form select:focus, form input:focus {
+    border-color: #007bff;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+form button:active {
+    background-color: #004085;
+}
+
+.article-box {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.question {
+    margin-bottom: 1.5rem;
+}
+
+.question label {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.question input {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.answer {
+    display: none;
+    color: green;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.question button {
+    margin-top: 0.5rem;
+    padding: 8px 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.question button:hover {
+    background-color: #218838;
+}
+
+.question button:active {
+    background-color: #1e7e34;
+}
+
+.feedback {
+    background-color: #f1f8e9;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-left: 5px solid #689f38;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.feedback details {
+    margin-top: 0.5rem;
+    cursor: pointer;
+}
+
+.score-banner {
+    background-color: #e0f7fa;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border: 2px solid #00acc1;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+.centered-link {
+    text-align: center;
+    margin-top: 2rem; /* Optional margin */
+}
+.play-button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Spacing */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Larger font size */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s ease, transform 0.2s; /* Smooth transitions */
+}
+
+.play-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+.play-button:disabled {
+    background-color: #cccccc; /* Gray background when disabled */
+    cursor: not-allowed; /* Show "not-allowed" cursor */
+}
+
+.play-button:active {
+    transform: scale(0.98); /* Slightly shrink the button on click */
+}

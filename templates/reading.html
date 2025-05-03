@@ -3,79 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>German Reading Practice</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f4;
-        }
-        .question {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-        }
-        .answer {
-            display: none;
-            color: green;
-            margin-top: 5px;
-        }
-        .article-box {
-            margin: 20px 0;
-            background: #fff9c4;
-            padding: 15px;
-            border-radius: 5px;
-        }
-        .result {
-            margin-top: 20px;
-            background: #e8f5e9;
-            padding: 15px;
-            border-left: 4px solid #4caf50;
-        }
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        li {
-            background: white;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', path='reading.css') }}">
 </head>
 <body>
-    <h1>German Reading Practice</h1>
+    <div class="container">
+        <h1>German Reading Practice</h1>
 
-    <form id="levelForm">
-        <label for="level">Choose Level (A1–C2): </label>
-        <select name="level" id="level" required>
-            <option value="">-- Select Level --</option>
-            <option value="A1">A1</option>
-            <option value="A2">A2</option>
-            <option value="B1">B1</option>
-            <option value="B2">B2</option>
-            <option value="C1">C1</option>
-            <option value="C2">C2</option>
-        </select>
-        <button type="submit">Generate</button>
-    </form>
-
-    <hr>
-
-    <div id="content"></div>
-    <div id="evaluation" class="result" style="display:none;"></div>
+        <form id="levelForm" class="card center-card">
+            <label for="level">Choose Level (A1–C2): </label>
+            <select name="level" id="level" required>
+                <option value="">-- Select Level --</option>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+                <option value="C1">C1</option>
+                <option value="C2">C2</option>
+            </select>
+            <button type="submit">Generate</button>
+            <div class="centered-link">
+                <a href="/">⬅ Back</a>
+            </div>
+        </form>
+       
+        <div id="content"></div>
+    </div>
 
     <script>
         const form = document.getElementById("levelForm");
         const contentDiv = document.getElementById("content");
-        const evaluationDiv = document.getElementById("evaluation");
-
         let latestQuestions = [];
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            evaluationDiv.style.display = "none";
+            contentDiv.innerHTML = "";
             const formData = new FormData(form);
             const response = await fetch("/reading", {
                 method: "POST",
@@ -97,14 +58,17 @@
             const escapedTopic = topic.replace(/"/g, '&quot;');
 
             contentDiv.innerHTML = `
-                <h2>Topic: ${topic}</h2>
-                <div class="article-box"><strong>Artikel:</strong><br>${article.replace(/\n/g, "<br>")}</div>
-                <h3>Fragen:</h3>
-                <form id="answerForm">
+                <div class="card">
+                    <h2>Topic: ${topic}</h2>
+                    <div class="article-box"><strong>Artikel:</strong><br>${article.replace(/\n/g, "<br>")}</div>
+                </div>
+
+                <form id="answerForm" class="card">
                     <input type="hidden" name="article" value="${escapedArticle}">
                     <input type="hidden" name="topic" value="${escapedTopic}">
+                    <h3>Fragen:</h3>
                     ${questions_and_answers.map((q, i) => `
-                        <div class="question">
+                        <div class="question card">
                             <label>${q.question}</label><br>
                             <input type="text" name="user_answers" style="width: 100%;" /><br>
                             <button type="button" onclick="toggleAnswer(${i}, this)">Show Answer</button>
@@ -114,13 +78,6 @@
                     <button type="button" onclick="submitAnswers()">Submit My Answers</button>
                 </form>
             `;
-        }
-        
-        function showAnswer(index) {
-            const answerDiv = document.getElementById(`answer${index}`);
-            if (answerDiv) {
-                answerDiv.style.display = "block";
-            }
         }
 
         function toggleAnswer(index, button) {
@@ -138,7 +95,6 @@
             const answerForm = document.getElementById("answerForm");
             const formData = new FormData(answerForm);
 
-            // Append question-answer objects as JSON strings
             latestQuestions.forEach(qa => {
                 formData.append("questions_and_answers", JSON.stringify(qa));
             });
@@ -149,18 +105,27 @@
             })
             .then(response => response.json())
             .then(data => {
-                const results = data.evaluation.map(e =>
-                    `<li>
-                        <strong>Frage ${e.question_number}:</strong><br>
-                        Deine Antwort: <em>${e.user_answer}</em><br>
-                        Richtige Antwort: <em>${e.correct_answer}</em><br>
-                        <strong>${e.is_correct ? "✅ Richtig" : "❌ Falsch"}</strong><br>
-                        <details><summary>Erklärung anzeigen</summary>${e.explanation}</details>
-                    </li>`
-                ).join("");
+                const { evaluation, score } = data;
 
-                evaluationDiv.innerHTML = `<h3>Auswertung:</h3><ul>${results}</ul><p><strong>Punktzahl: ${data.score}</strong></p>`;
-                evaluationDiv.style.display = "block";
+                const scoreBanner = document.createElement("div");
+                scoreBanner.className = "score-banner";
+                scoreBanner.innerHTML = `<h3>Auswertung</h3><p><strong>Gesamtpunktzahl: ${score}</strong></p>`;
+                answerForm.prepend(scoreBanner);
+
+                evaluation.forEach(e => {
+                    const questionDivs = document.getElementsByClassName("question");
+                    const currentQuestion = questionDivs[e.question_number - 1];
+
+                    const feedbackDiv = document.createElement("div");
+                    feedbackDiv.className = "feedback";
+                    feedbackDiv.innerHTML = `
+                        <p><strong>Deine Antwort:</strong> <em>${e.user_answer}</em></p>
+                        <p><strong>Richtige Antwort:</strong> <em>${e.correct_answer}</em></p>
+                        <p><strong>${e.is_correct ? "✅ Richtig" : "❌ Falsch"}</strong></p>
+                        <details><summary>Erklärung anzeigen</summary><p>${e.explanation}</p></details>
+                    `;
+                    currentQuestion.appendChild(feedbackDiv);
+                });
             })
             .catch(error => {
                 console.error("Error submitting answers:", error);
