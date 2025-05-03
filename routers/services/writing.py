@@ -34,7 +34,7 @@ async def render_writing_page(request: Request):
     return templates.TemplateResponse("writing.html", {"request": request})
 
 @router.post("/writing-topic", tags=["writing"])
-async def get_writing_topic(level: str = Form(...), db: Session = Depends(get_db)):
+async def get_writing_topic(level: str = Form(...), db: Session = Depends(get_db), include_in_schema=False):
     """
     Generate a writing topic based on the selected level.
 
@@ -59,7 +59,7 @@ async def get_writing_topic(level: str = Form(...), db: Session = Depends(get_db
             content={"error": "Failed to generate writing topic."} 
         )
 
-@router.post("/submit-writing", tags=["writing"], response_class=JSONResponse)
+@router.post("/submit-writing", tags=["writing"], response_class=JSONResponse, include_in_schema=False)
 async def submit_evaluate_and_save_writing(
     level: str = Form(...),
     topic: str = Form(...),

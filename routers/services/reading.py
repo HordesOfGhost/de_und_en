@@ -39,7 +39,7 @@ async def render_reading_page(request: Request):
         "request": request
     })
 
-@router.post("/reading", tags=['reading'], response_class=JSONResponse)
+@router.post("/reading", tags=['reading'], response_class=JSONResponse, include_in_schema=False)
 async def get_reading_contents(level: str = Form("A1"), db: Session = Depends(get_db)):
     """
     Generates reading content based on the user's selected level and stores metadata.
@@ -64,7 +64,7 @@ async def get_reading_contents(level: str = Form("A1"), db: Session = Depends(ge
         "questions_and_answers": json_data['questions_and_answers']
     })
 
-@router.post("/submit-reading-answers", tags=["reading"], response_class=JSONResponse)
+@router.post("/submit-reading-answers", tags=["reading"], response_class=JSONResponse, include_in_schema=False)
 async def submit_answers_from_reading(
     user_answers: List[str] = Form(...),
     article: str = Form(...),
