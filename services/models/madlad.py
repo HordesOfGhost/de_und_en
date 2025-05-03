@@ -15,4 +15,4 @@ from .config import device
 madlad_tokenizer = "placeholder_tokenizer"
 madlad_model = "placeholder_tokenizer"
 
-### If you want to use the madlad model uncomment the load function and under translation services use legacy functions
+### If you want to use the madlad model uncomment the load function (Commented here because takes memory and time to load server) and under translation services use madlad functions

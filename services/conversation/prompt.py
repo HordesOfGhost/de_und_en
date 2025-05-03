@@ -1,10 +1,24 @@
-prompt_template_for_conversation_generation = '''
+def get_conversation_prompt(topic: str) -> str:
+    """
+    Generates a conversation prompt based on the provided topic.
+
+    Parameters
+    -----------
+    topic : str
+        The topic for the conversation.
+
+    Returns
+    --------
+    str
+        The formatted conversation prompt.
+    """
+    prompt_template = '''
     Create a natural-sounding conversation between two or more people about {}.
     Use realistic, everyday language with a smooth, dynamic flow.
     
     Instructions:
     - Do not include any introductory or concluding remarks.
-    - Do not say things like "I understand the task" or "I hope this helps".
+    - Do not say things like "I understand the task" or "I hope this helps". 
     
     Vary the use of:
     - **Nouns** (common, proper, abstract, collective) to add variety and context.
@@ -28,4 +42,6 @@ prompt_template_for_conversation_generation = '''
 
     Only provide the conversation—no explanations or descriptions needed.
     Write the character's name first, followed by their dialogue. Ensure the character's name are gender-neutral.
-'''
+    '''
+    
+    return prompt_template.format(topic)

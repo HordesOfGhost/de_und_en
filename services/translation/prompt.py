@@ -1,9 +1,11 @@
-prompt_template_for_language_translation = """
-Translate the following text. Please only provide the translation and no explanation.
+def get_prompt_for_language_translation(lng1, lng2, text):
+    prompt = f"""
+    Translate the following text. Please only provide the translation and no explanation.
 
-Source Language: {lng_1}
-Target Language: {lng_2}
-Text: "{text}"
+    Source Language: {lng1}
+    Target Language: {lng2}
+    Text: "{text}"
 
-Translation:
-"""
+    Translation:
+    """
+    return prompt

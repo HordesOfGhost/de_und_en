@@ -6,6 +6,29 @@ import io
 import soundfile as sf
 
 def synthesize_conversation(conversation, language):
+    """
+    Synthesizes a conversation into speech audio in the specified language.
+
+    This function takes a conversation (formatted with speakers and dialogue), 
+    processes it based on the language, and synthesizes the speech for each 
+    line of the conversation. If the language is English, it assigns different 
+    voices to different speakers. If the language is German, the same voice is 
+    used for all speakers.
+
+    Parameters
+    -----------
+    conversation : str
+        A string representing a conversation where each line contains a speaker 
+        and their dialogue, separated by a colon (e.g., 'Speaker: Hello!').
+    language : str
+        The language of the conversation, either 'en' for English or 'de' for German.
+
+    Returns
+    --------
+    bytes
+        The synthesized speech audio in WAV format, returned as a byte stream.
+    """
+
     if language == 'en':
         tts = en_tts_model
         voice_pool = eng_voice_pool

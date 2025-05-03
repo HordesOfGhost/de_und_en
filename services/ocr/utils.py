@@ -5,9 +5,28 @@ from services.ocr.config import min_distance_ratio
 
 def boxes_are_close(box1, box2, min_distance_ratio, img_width, img_height):
     """
-    Returns True if boxes touch, overlap, or are within a minimum distance.
-    min_distance_ratio: fraction of image diagonal (e.g., 0.01 for 1%)
+    Determines whether two bounding boxes are close enough to be considered part of the same text group.
+    
+    Two boxes are considered close if they touch, overlap, or the distance between them is less than
+    a specified fraction of the image diagonal.
+
+    Parameters
+    -----------
+    box1, box2 : tuple
+        Tuples representing two bounding boxes ((x1, y1), (x2, y2)) in absolute pixel values.
+    min_distance_ratio : float
+        A ratio of the image diagonal used as the threshold distance.
+    img_width : int
+        Width of the image in pixels.
+    img_height : int
+        Height of the image in pixels.
+
+    Returns
+    --------
+    bool
+        True if boxes are overlapping, touching, or close enough. False otherwise.
     """
+
     (x1a, y1a), (x2a, y2a) = box1
     (x1b, y1b), (x2b, y2b) = box2
 
@@ -40,7 +59,25 @@ def boxes_are_close(box1, box2, min_distance_ratio, img_width, img_height):
     return distance <= min_distance
 
 
-def fix_and_join_overlapping_or_close_boxes(ocr_data,height,width, ):
+def fix_and_join_overlapping_or_close_boxes(ocr_data, height, width):
+    """
+    Merges overlapping or nearby OCR word boxes into unified text groups.
+
+    Parameters
+    -----------
+    ocr_data : dict
+        Parsed OCR output containing normalized coordinates and text.
+    height : int
+        Height of the image in pixels.
+    width : int
+        Width of the image in pixels.
+
+    Returns
+    --------
+    list[dict]
+        A list of merged boxes with absolute pixel coordinates and combined text.
+    """
+
     joined_ocr_data = []
 
     for line in ocr_data['lines']:
@@ -73,6 +110,24 @@ def fix_and_join_overlapping_or_close_boxes(ocr_data,height,width, ):
 
 
 def translate_for_ocr(gemini_model, prompt, results):
+    """
+    Uses the Gemini model to translate grouped OCR text.
+
+    Parameters
+    -----------
+    gemini_model : object
+        A model instance capable of generating content via `.generate_content()`.
+    prompt : str
+        Formatted prompt containing the OCR text for translation.
+    results : list[dict]
+        OCR output with each entry containing a 'text' and 'box'.
+
+    Returns
+    --------
+    list[dict]
+        List of translated text with original bounding boxes.
+    """
+
     response = gemini_model.generate_content(prompt)
 
     translated_lines = response.text.strip().split("\n")
@@ -88,6 +143,22 @@ def translate_for_ocr(gemini_model, prompt, results):
     return translated_json
 
 def replace_image_with_translated_text(original_cv2_img, translated_ocr_data):
+    """
+    Draws translated text back onto an image by replacing the original OCR regions.
+
+    Parameters
+    -----------
+    original_cv2_img : np.ndarray
+        Original image as a NumPy array (BGR format).
+    translated_ocr_data : list[dict]
+        List containing translated text and bounding box info.
+
+    Returns
+    --------
+    np.ndarray
+        Image with translated text rendered in place of original text.
+    """
+
     translated_cv2_img = original_cv2_img.copy()
 
     for res in translated_ocr_data:
