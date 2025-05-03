@@ -31,8 +31,11 @@ class Grammar(Base):
     __tablename__ = "grammar"
 
     id = Column(Integer, primary_key=True, index=True)
-    german = Column(String, unique=True, nullable=False)
+    german = Column(String, nullable=False)
     grammar_explanations = Column(String, nullable=False)
+    __table_args__ = (
+        UniqueConstraint("german", "grammar_explanations", name="uq_grammar_explanations"),
+    )
 
 class ReadingMetaData(Base):
     __tablename__ = "reading_metadata"
