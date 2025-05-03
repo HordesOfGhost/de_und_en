@@ -7,12 +7,13 @@
 </head>
 <body>
 
-    <div class="card">
+    <div class="container">
         <h1>German Writing Practice</h1>
 
-        <form id="levelForm">
+        <form id="levelForm" class="card center-card">
+            <label for="level">Choose your level (A1–C2):</label>
             <select name="level" id="level" required>
-                <option value="">-- Wähle dein Niveau (A1–C2): --</option>
+                <option value="">-- Select your level --</option>
                 <option value="A1">A1</option>
                 <option value="A2">A2</option>
                 <option value="B1">B1</option>
@@ -20,29 +21,28 @@
                 <option value="C1">C1</option>
                 <option value="C2">C2</option>
             </select>
-            <button type="submit">Thema generieren</button>
+            <button type="submit">Generate Topic</button>
+            <div class="centered-link">
+                <a href="/">⬅ Back</a>
+            </div>
+
+            <input type="hidden" id="hiddenLevel" name="level">
+            <input type="hidden" id="hiddenTopic" name="topic">
+
+            <div id="writingBox" class="writing-section hidden">
+                <h2 id="topicTitle"></h2>   
+                <textarea id="userText" placeholder="Schreibe deinen Text hier..."></textarea>
+                <button type="button" onclick="submitWriting()">Absenden</button>
+                <button type="button" class="clear-button" onclick="clearText()">Löschen</button>
+            </div>
+
+            <div id="evaluationResult" class="evaluation-box hidden">
+                <h3>Bewertung</h3>
+                <p><strong>Score:</strong> <span id="score"></span></p>
+                <p><strong>Evaluation:</strong></p>
+                <p id="evaluationText"></p>
+            </div>
         </form>
-        <div class="centered-link">
-            <a href="/">⬅ Back</a>
-        </div>
-
-        <input type="hidden" id="hiddenLevel" name="level">
-        <input type="hidden" id="hiddenTopic" name="topic">
-
-        <div id="writingBox" class="hidden">
-            <h2 id="topicTitle"></h2>   
-            <textarea id="userText" placeholder="Schreibe deinen Text hier..."></textarea>
-            <br>
-            <button onclick="submitWriting()">Absenden</button>
-            <button type="button" class="clear-button" onclick="clearText()">Löschen</button> <!-- Clear button -->
-        </div>
-
-        <div id="evaluationResult" class="evaluation-box hidden">
-            <h3>Bewertung</h3>
-            <p><strong>Score:</strong> <span id="score"></span></p>
-            <p><strong>Evaluation:</strong></p>
-            <p id="evaluationText"></p>
-        </div>
     </div>
 
     <script>
@@ -60,11 +60,10 @@
 
             if (response.ok) {
                 const data = await response.json();
-                topicTitle.textContent = `Thema: ${data.topic}`;
-                writingBox.style.display = "block";
-                document.getElementById("evaluationResult").style.display = "none"; // Hide evaluation results if topic is generated
+                topicTitle.textContent = `Theme: ${data.topic}`;
+                writingBox.classList.remove("hidden");
+                document.getElementById("evaluationResult").classList.add("hidden");
 
-                // Store hidden level and topic for submission
                 document.getElementById("hiddenLevel").value = data.level;
                 document.getElementById("hiddenTopic").value = data.topic;
             } else {
@@ -91,15 +90,15 @@
                 const result = await response.json();
                 document.getElementById("score").textContent = result.score;
                 document.getElementById("evaluationText").textContent = result.evaluation;
-                document.getElementById("evaluationResult").style.display = "block";
-                writingBox.style.display = "block"; // Keep the writing box visible after submission
+                document.getElementById("evaluationResult").classList.remove("hidden");
+                writingBox.classList.remove("hidden");
             } else {
                 alert("Fehler bei der Bewertung.");
             }
         }
 
         function clearText() {
-            document.getElementById("userText").value = ''; // Clear the textarea content
+            document.getElementById("userText").value = '';
         }
     </script>
 </body>

@@ -27,7 +27,7 @@
             </div>
         </form>
         <!-- Content will be hidden initially -->
-        <div id="content" class="card center-card" style="display: none;"></div>
+        <div id="content"></div>
     </div>
 
     <script>
@@ -62,27 +62,29 @@
             const escapedTopic = topic.replace(/"/g, '&quot;');
 
             contentDiv.innerHTML = `
-                <h2>Topic: ${topic}</h2>
-                <button type="button" id="playButton" onclick="playAudio('${escapedArticle}', 'de')" class="play-button" title="Click to play the article audio">
-                    🔊 Play Article Audio
-                </button>
-                <h3>Fragen:</h3>
+                 <div class="card">
+                    <h2>Topic: ${topic}</h2>
+                    <button type="button" id="playButton" onclick="playAudio('${escapedArticle}', 'de')" class="play-button" title="Click to play the article audio">
+                        🔊 Play Article Audio
+                    </button>
+                </div>
+                
                 <form id="answerForm" class="card">
                     <input type="hidden" name="article" value="${escapedArticle}">
                     <input type="hidden" name="topic" value="${escapedTopic}">
+                    <h3>Fragen:</h3>
                     ${questions_and_answers.map((q, i) => `
-                        <div class="question">
+                        <div class="question card">
                             <label>${q.question}</label><br>
-                            <input type="text" name="user_answers" placeholder="Deine Antwort..." /><br>
+                            <input type="text" name="user_answers" style="width: 100%;" /><br>
                             <button type="button" onclick="toggleAnswer(${i}, this)">Show Answer</button>
-                            <div class="answer" id="answer${i}" style="display:none;">Antwort: ${q.answer}</div>
+                            <div class="answer" id="answer${i}">Antwort: ${q.answer}</div>
                         </div>
                     `).join("")}
                     <button type="button" onclick="submitAnswers()">Submit My Answers</button>
                 </form>
             `;
 
-            // Show the content after it's generated
             contentDiv.style.display = "block";
         }
 

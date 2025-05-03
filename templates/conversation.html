@@ -48,8 +48,10 @@
                 <div class="conversation-box">
                     <h3>English</h3>
                     <pre id="output-english">{% if english %}{{ english }}{% endif %}</pre>
+                    <!-- English Play Button -->
                     <button 
                         id="play-english"
+                        class="play-button"
                         style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
                         data-text="{{ english | escape }}" 
                         data-lang="English"
@@ -58,12 +60,17 @@
                         {% if not english %}style="display: none;"{% endif %}>
                         🔊
                     </button>
+
+                    <span id="status-english" style="margin-left: 0.5rem;"></span>
+
                 </div>
                 <div class="conversation-box">
                     <h3>German</h3>
                     <pre id="output-german">{% if german %}{{ german }}{% endif %}</pre>
+                    <!-- German Play Button -->
                     <button 
                         id="play-german"
+                        class="play-button"
                         style="background: none; border: none; cursor: pointer; font-size: 1em; padding: 0;"
                         data-text="{{ german | escape }}" 
                         data-lang="German"
@@ -72,6 +79,8 @@
                         {% if not german %}style="display: none;"{% endif %}>
                         🔊
                     </button>
+
+                    <span id="status-german" style="margin-left: 0.5rem;"></span>
                 </div>
             </div>
         </div>
@@ -116,15 +125,19 @@
         function playSoundFromDataset(buttonElement) {
             const text = buttonElement.getAttribute('data-text');
             const lang = buttonElement.getAttribute('data-lang');
-            playSound(text, lang);
+
+            // Show loading icon
+            buttonElement.textContent = "⏳";
+            buttonElement.disabled = true;
+
+            playSound(text, lang, buttonElement);
         }
 
-        function playSound(text, language) {
+        function playSound(text, language, buttonElement) {
             const langMap = {
                 "English": "en",
                 "German": "de"
             };
-
             const mappedLang = langMap[language] || language;
 
             fetch('/synthesize-conversation', {
@@ -144,15 +157,23 @@
             .then(blob => {
                 const audioURL = URL.createObjectURL(blob);
                 const audio = new Audio(audioURL);
+
+                // Update button to show "Playing..."
+                buttonElement.textContent = "🎶";
                 audio.play();
+
+                audio.onended = () => {
+                    buttonElement.textContent = "🔊";
+                    buttonElement.disabled = false;
+                };
             })
             .catch(error => {
                 console.error('Audio error:', error);
                 alert("Audio playback failed.");
+                buttonElement.textContent = "🔊";
+                buttonElement.disabled = false;
             });
         }
-
-
 
         // Retrieve by ID logic
         const retrieveForm = document.getElementById("retrieve-form");

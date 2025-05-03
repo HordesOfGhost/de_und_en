@@ -85,8 +85,6 @@
             };
             const mappedLang = langMap[language] || language;
 
-            const params = new URLSearchParams({ text: rawCorrectAnswer, language: mappedLang });
-
             fetch('/synthesize', {
                 method: 'POST',
                 headers: {
@@ -113,6 +111,7 @@
                 alert("Audio playback failed.");
             });
         }
+
 
         document.getElementById("translate-form").addEventListener("submit", async function (e) {
             e.preventDefault();

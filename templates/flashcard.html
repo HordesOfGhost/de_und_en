@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <h1>Flashcard</h1>
-    
+
         <div class="card">
             <form method="get" action="/flashcard" class="direction-form">
                 <select name="direction" id="direction" onchange="this.form.submit()">
@@ -18,48 +18,36 @@
                     <option value="de_to_en" {% if direction == 'de_to_en' %}selected{% endif %}>German to English</option>
                 </select>
             </form>
-            {% if direction == 'en_to_de' %}
-                <h2>
-                    <span>{{ card.english }}</span>  
-                    <button 
-                        onclick="playSound('{{ card.english }}', 'English')" 
-                        title="Play Sound">
-                        🔊
-                    </button>
-                </h2>
-            {% else %}
-                <h2>
+
+            <h2>
+                {% if direction == 'en_to_de' %}
+                    <span>{{ card.english }}</span>
+                    <button onclick="playSound('{{ card.english }}', 'English')" title="Play Sound">🔊</button>
+                {% else %}
                     <span>{{ card.german }}</span>
-                    <button 
-                        onclick="playSound('{{ card.german }}', 'German')" 
-                        title="Play Sound">
-                        🔊
-                    </button>
-                </h2>
-            {% endif %}
+                    <button onclick="playSound('{{ card.german }}', 'German')" title="Play Sound">🔊</button>
+                {% endif %}
+            </h2>
 
             <form id="answer-form">
+                <label for="user-answer" style="display:none;">Your Answer</label>
                 <input type="text" id="user-answer" placeholder="Type your answer" autocomplete="off" required>
                 <button type="submit">Check</button>
             </form>
 
-            <!-- Clickable area on the right side of the card -->
             <div class="right-click-area" onclick="goToNextCard()"></div>
-
             <div class="feedback" id="feedback"></div>
+
             <div id="play-answer-button-container" style="display:none;">
                 <center>
-                    {% if direction == 'en_to_de' %}
-                        <button id="play-answer-button" onclick="playAnswerAudio('German')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
-                            🔊 
-                        </button>
-                    {% elif direction == 'de_to_en' %}
-                        <button id="play-answer-button" onclick="playAnswerAudio('English')" style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
-                            🔊
-                        </button>
-                    {% endif %}
+                    <button id="play-answer-button"
+                        onclick="playAnswerAudio('{{ 'German' if direction == 'en_to_de' else 'English' }}')"
+                        style="background: none; border: none; cursor: pointer; font-size: 1.5em; padding: 10px;">
+                        🔊
+                    </button>
                 </center>
             </div>
+
             <a href="/" class="back-button">⬅ Back</a>
         </div>
     </div>
@@ -69,16 +57,16 @@
         const input = document.getElementById('user-answer');
         const feedback = document.getElementById('feedback');
         const playAnswerButtonContainer = document.getElementById('play-answer-button-container');
+
         const rawCorrectAnswer = "{{ card.german if direction == 'en_to_de' else card.english }}";
 
-        // Normalize text: lowercase, remove accents and special characters
         function normalize(text) {
             return text
                 .toLowerCase()
                 .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")  // remove accents
-                .replace(/[^\w\s]|_/g, "")        // remove punctuation/special chars
-                .replace(/\s+/g, " ")             // collapse multiple spaces
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s]|_/g, "")
+                .replace(/\s+/g, " ")
                 .trim();
         }
 
@@ -96,41 +84,27 @@
                 feedback.style.color = "red";
             }
 
-            // Show the "Play Answer" button after checking
             playAnswerButtonContainer.style.display = 'block';
         });
 
         function goToNextCard() {
-            window.location.href = "/flashcard?direction={{ direction }}"; // Keep direction when navigating
+            window.location.href = "/flashcard?direction={{ direction }}";
         }
 
         function playSound(text, language) {
-            const langMap = {
-                "English": "en",
-                "German": "de"
-            };
-
-            const mappedLang = langMap[language] || language;
+            const langCode = mapLang(language);
 
             fetch('/synthesize', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    text: text,
-                    language: mappedLang
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, language: langCode })
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch audio.");
-                }
+                if (!response.ok) throw new Error("Failed to fetch audio.");
                 return response.blob();
             })
             .then(blob => {
-                const audioURL = URL.createObjectURL(blob);
-                const audio = new Audio(audioURL);
+                const audio = new Audio(URL.createObjectURL(blob));
                 audio.play();
             })
             .catch(error => {
@@ -139,41 +113,31 @@
             });
         }
 
-
         function playAnswerAudio(language) {
-            const langMap = {
-                "English": "en",
-                "German": "de"
-            };
-            const mappedLang = langMap[language] || language;
-
-            const params = new URLSearchParams({ text: rawCorrectAnswer, language: mappedLang });
+            const langCode = mapLang(language);
 
             fetch('/synthesize', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    text: text,
-                    language: mappedLang
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: rawCorrectAnswer, language: langCode })
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch audio.");
-                }
+                if (!response.ok) throw new Error("Failed to fetch audio.");
                 return response.blob();
             })
             .then(blob => {
-                const audioURL = URL.createObjectURL(blob);
-                const audio = new Audio(audioURL);
+                const audio = new Audio(URL.createObjectURL(blob));
                 audio.play();
             })
             .catch(error => {
                 console.error('Audio error:', error);
                 alert("Audio playback failed.");
             });
+        }
+
+        function mapLang(language) {
+            const langMap = { English: "en", German: "de" };
+            return langMap[language] || "en";
         }
     </script>
 </body>
