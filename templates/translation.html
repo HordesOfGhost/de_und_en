@@ -87,22 +87,31 @@
             const mappedLang = langMap[language] || language;
             const params = new URLSearchParams({ text, language: mappedLang });
 
-            fetch('/synthesize?' + params.toString())
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch audio.");
-                    }
-                    return response.blob();
+            fetch('/synthesize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text,
+                    language: mappedLang
                 })
-                .then(blob => {
-                    const audioURL = URL.createObjectURL(blob);
-                    const audio = new Audio(audioURL);
-                    audio.play();
-                })
-                .catch(error => {
-                    console.error('Audio error:', error);
-                    alert("Audio playback failed.");
-                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch audio.");
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const audioURL = URL.createObjectURL(blob);
+                const audio = new Audio(audioURL);
+                audio.play();
+            })
+            .catch(error => {
+                console.error('Audio error:', error);
+                alert("Audio playback failed.");
+            });
         }
 
         document.getElementById("translate-form").addEventListener("submit", async function (e) {

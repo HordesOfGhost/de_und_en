@@ -48,6 +48,19 @@ class ListeningMetaData(Base):
     level = Column(String, nullable=False)
     topic = Column(String, nullable=False)
 
+class WritingMetaData(Base):
+    __tablename__ = "writing_metadata"
+
+    id = Column(Integer, primary_key=True, index=True)
+    level = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("level", "topic", name="uq_level_topic"),
+    )
+
+
 def get_db():
     db = SessionLocal()
     try:

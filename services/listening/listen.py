@@ -9,6 +9,7 @@ def generate_listening_content_and_save_metadata(level: str, db:Session):
     prompt = get_prompt_for_generating_listening_content(level, db)
     response = gemini_model.generate_content(prompt).text
     json_response = extract_json_content_from_llm_response(response)
+    json_response['article'] = json_response['article'].replace("\n","")
     listening_metadata_data = ListeningMetaDataModel(
         level=json_response['level'],
         topic=json_response['topic']

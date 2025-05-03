@@ -9,7 +9,8 @@ from routers.services import (
     ocr,
     grammar,
     reading,
-    listening
+    listening,
+    writing
 )
 from routers.events import events
 from routers.crud import (
@@ -45,6 +46,8 @@ app.include_router(update.router)
 app.include_router(delete.router)
 app.include_router(reading.router)
 app.include_router(listening.router)
+app.include_router(writing.router)
+
 
 
 

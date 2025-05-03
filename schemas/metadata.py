@@ -14,3 +14,11 @@ class ListeningMetaDataModel(BaseModel):
     class Config:
         from_attributes = True
 
+class WritingMetaDataModel(BaseModel):
+    level: str
+    topic: str
+    content: str
+    
+    class Config:
+        from_attributes = True
+

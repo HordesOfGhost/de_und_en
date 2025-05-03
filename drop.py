@@ -5,7 +5,7 @@ cursor = conn.cursor()
 
 
 # 3. Drop old table
-cursor.execute("DROP TABLE grammar")
+cursor.execute("DROP TABLE writing_metadata")
 
 
 

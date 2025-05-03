@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from .models import Translation, Conversation, Grammar, ListeningMetaData, ReadingMetaData
+from .models import Translation, Conversation, Grammar, ListeningMetaData, ReadingMetaData, WritingMetaData
 from schemas.translation import TranslationModel
 from schemas.conversation import  ConversationModel
 from schemas.grammar import  GrammarModel
-from schemas.metadata import ReadingMetaDataModel, ListeningMetaDataModel
+from schemas.metadata import ReadingMetaDataModel, ListeningMetaDataModel, WritingMetaDataModel
 
 
 def save_translation(db: Session, translation_data: TranslationModel):
@@ -99,3 +99,16 @@ def save_listening_metadata(db: Session, listening_metadata_data: ListeningMetaD
     db.refresh(listening_metadata)
     return listening_metadata
 
+def save_writing_metadata_and_content(db: Session, metadata: WritingMetaDataModel):
+    existing = db.query(WritingMetaData).filter_by(
+        level=metadata.level,
+        topic=metadata.topic,
+        content=metadata.content
+    ).first()
+    if existing:
+        return existing
+    new_meta = WritingMetaData(level=metadata.level, topic=metadata.topic, content = metadata.content)
+    db.add(new_meta)
+    db.commit()
+    db.refresh(new_meta)
+    return new_meta

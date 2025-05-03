@@ -5,6 +5,8 @@ from fastapi.templating import Jinja2Templates
 from services.listening.listen import generate_listening_content_and_save_metadata
 from services.listening.evaluate import evaluate_listening_answers
 import json
+from services.db import get_db
+from sqlalchemy.orm import Session
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
@@ -14,8 +16,8 @@ async def get_listening_page(request: Request):
     return templates.TemplateResponse("listening.html", {"request": request})
 
 @router.post("/listening", tags=['listening'], response_class=JSONResponse)
-async def get_listening_contents(level: str=Form("A1")):
-    json_data = generate_listening_content_and_save_metadata(level)
+async def get_listening_contents(level: str=Form("A1"), db:Session = Depends(get_db)):
+    json_data = generate_listening_content_and_save_metadata(level,db)
     return JSONResponse({
         "level":json_data['level'],
         "topic":json_data['topic'],

@@ -121,17 +121,25 @@
         }
 
         function playAudio(text, language) {
-            fetch(`/synthesize?text=${encodeURIComponent(text)}&language=${language}`)
-                .then(response => response.blob())
-                .then(blob => {
-                    const audio = new Audio(URL.createObjectURL(blob));
-                    audio.play();
-                })
-                .catch(error => {
-                    console.error('Error playing audio:', error);
-                    alert("Error loading audio.");
-                });
-        }
+        fetch('/synthesize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                text: text,
+                language: language
+            })
+        })
+        .then(response => response.blob())
+        .then(wavBlob => {
+            const audioUrl = URL.createObjectURL(wavBlob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
 
         function showAnswer(index) {
             const answerDiv = document.getElementById(`answer${index}`);
