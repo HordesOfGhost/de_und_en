@@ -1,19 +1,20 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter
 from services.db.models import init_db
-import os
-import signal
+
 router = APIRouter()
 
 @router.on_event("startup")
 async def on_startup():
+    """
+    Run initialization tasks on application startup.
+    """
     init_db()
+    print("Database initialized successfully.")
 
- 
-def graceful_shutdown():
-    os.kill(os.getpid(), signal.SIGTERM)
-    return Response(status_code=200, content='Server shutting down...')
- 
-@router.on_event('shutdown')
+
+@router.on_event("shutdown")
 def on_shutdown():
-    print('Server shutting down...')
-    graceful_shutdown()
+    """
+    Perform cleanup tasks during shutdown.
+    """
+    print("Server is shutting down gracefully.")
