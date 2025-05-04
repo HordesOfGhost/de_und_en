@@ -33,9 +33,6 @@ colorama==0.4.6
 comm==0.2.2
 confection==0.1.5
 contourpy==1.2.1
-coqpit-config==0.2.0
-coqui-tts==0.26.0
-coqui-tts-trainer==0.2.3
 cssselect2==0.8.0
 cycler==0.12.1
 cymem==2.0.11
@@ -167,7 +164,6 @@ python-doctr==0.11.0
 python-dotenv==1.0.1
 python-multipart==0.0.20
 pytz==2025.2
-pywin32==304
 PyYAML==6.0.2
 pyzmq==25.0.2
 RapidFuzz==3.13.0
@@ -208,9 +204,6 @@ tiktoken==0.9.0
 tinycss2==1.4.0
 tinyhtml5==2.0.0
 tokenizers==0.21.1
-torch==2.6.0+cu126
-torchaudio==2.6.0+cu126
-torchvision==0.21.0+cu126
 tornado==6.3
 tqdm==4.67.1
 trainer==0.0.36
