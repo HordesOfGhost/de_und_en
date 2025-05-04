@@ -1,6 +1,8 @@
 # de\_und\_en
 
-**de\_und\_en** is a full-featured English-German language learning platform that integrates:
+**de\_und\_en** is a little effort from my side to learn German. While it is not that sophisticated for learning a language.
+It might help as a supplementary to help in your Learning. Also maybe you can get some AI insights from here. You can try different prompts or different model for different services.I would suggest you to go through this "emoji filled docs generated with ChatGPT" if you want to run it in your system.
+Cheers.
 
 * ✅ **Translation** (English ↔ German)
 * 🎙️ **Transcription** from audio (supports `.wav` and `.m4a`)
@@ -14,7 +16,7 @@
 
 ---
 
-## 🚀 Setup
+## 🚀 Setup without Docker
 
 ### 1. Clone the repository
 
