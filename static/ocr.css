@@ -107,6 +107,10 @@ video, canvas {
     border: 2px solid #ccc;
     border-radius: 8px;
 }
+.centered-link {
+    text-align: center;
+    margin-top: 1rem;
+}
 
 .centered-link a {
     text-decoration: none;

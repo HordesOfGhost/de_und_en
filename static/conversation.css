@@ -57,6 +57,10 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+.centered-link {
+    text-align: center;
+    margin-top: 1rem;
+}
 
 .centered-link a {
     text-decoration: none;
@@ -67,7 +71,6 @@ button:hover {
 .centered-link a:hover {
     text-decoration: underline;
 }
-
 #loading-message {
     margin-top: 15px;
     color: #555;

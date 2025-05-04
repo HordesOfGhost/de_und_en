@@ -72,15 +72,18 @@ button:hover {
     font-weight: bold;
     font-size: 1.2rem;
 }
-
-.back-button {
-    text-decoration: none;
-    color: #007bff;
-    font-size: 1rem;
-    margin-top: 20px;
+.centered-link {
+    text-align: center;
+    margin-top: 1rem;
 }
 
-.back-button:hover {
+.centered-link a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.centered-link a:hover {
     text-decoration: underline;
 }
 .card {

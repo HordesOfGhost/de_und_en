@@ -110,6 +110,10 @@ footer p {
     font-size: 1rem;
     color: #007bff;
 }
+.centered-link {
+    text-align: center;
+    margin-top: 1rem;
+}
 
 .centered-link a {
     text-decoration: none;

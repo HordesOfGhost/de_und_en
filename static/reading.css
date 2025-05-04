@@ -144,6 +144,10 @@ form button:active {
     font-size: 1.2rem;
     text-align: center;
 }
+.centered-link {
+    text-align: center;
+    margin-top: 1rem;
+}
 
 .centered-link a {
     text-decoration: none;
