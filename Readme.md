@@ -260,7 +260,3 @@ de\_und\_en integrates state-of-the-art models from top AI research labs to powe
 * **Model:** [doctr (Mindee)](https://github.com/mindee/doctr)
 
 ---
-
-This section is best placed **after the "Install Required Tools"** section in your `README.md`.
-
-Would you like this structured into a table format for clearer readability?
