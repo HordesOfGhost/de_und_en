@@ -191,7 +191,46 @@ Your app will be running at `127.0.0.1:8000`
 
 ## 🛠 Features in Action
 
-Here's the revised **`README.md`** section with a new part titled **🔍 Models Used**, integrating links and descriptions for each core model used in your project:
+### 🏠 Landing Page
+
+![alt text](<Screenshot (21).png>)
+
+### 🌍 Translation
+
+![alt text](<Screenshot (22).png>)
+
+### 🎙️ Transcription
+
+![alt text](<Screenshot (23).png>)
+
+### 🧠 Flashcard
+
+![alt text](<Screenshot (24).png>)
+
+### 📸 Scan Translate and Overlay
+
+![alt text](<Screenshot (25).png>)
+
+### 📘 Explain Grammar
+
+![alt text](<Screenshot (26).png>)
+
+### 💬 Generate conversation and Translate
+
+![alt text](<Screenshot (27).png>)
+
+### 🎧 Listening Practise
+
+![alt text](<Screenshot (28).png>)
+
+### ✍️ Writing Practise
+
+![alt text](<Screenshot (33).png>)
+
+### 📖 Reading Practise
+
+![alt text](<Screenshot (31).png>)
+
 
 ---
 
@@ -202,28 +241,23 @@ de\_und\_en integrates state-of-the-art models from top AI research labs to powe
 ### 🗣️ **Text to Speech (TTS)**
 
 * **Model:** [Coqui TTS](https://github.com/coqui-ai/TTS)
-* Provides natural-sounding multilingual speech synthesis. Supports voice cloning and expressive speech.
 
 ### 🧏‍♂️ **Speech to Text (STT)**
 
 * **Model:** [OpenAI Whisper](https://github.com/openai/whisper)
-* Robust multilingual speech recognition system that transcribes audio (.wav, .m4a) with high accuracy.
 
 ### 🌍 **Legacy Language Translation**
 
 * **Model:** [MADLAD-400](https://github.com/google-research/google-research/tree/master/madlad_400)
 * Also available on [HuggingFace: madlad-400](https://huggingface.co/docs/transformers/en/model_doc/madlad-400)
-* A massively multilingual model capable of handling over 400 languages, ideal for low-resource and legacy language translations.
 
 ### 🤖 **General Language Translation & Reasoning**
 
 * **Model:** [Gemini (Google DeepMind)](https://ai.google.dev/gemini-api/docs/models)
-* Powers multilingual understanding, advanced reasoning, and contextual translation. Used for grammar explanations, conversational understanding, and intent classification.
 
 ### 📸 **OCR + Scan & Translate**
 
 * **Model:** [doctr (Mindee)](https://github.com/mindee/doctr)
-* High-accuracy OCR engine to extract and interpret text from scanned images or photos for translation overlays.
 
 ---
 
