@@ -1,5 +1,6 @@
   services:
     de_und_en:
+      platform: linux/amd64
       build:
         context: .
         dockerfile: Dockerfile

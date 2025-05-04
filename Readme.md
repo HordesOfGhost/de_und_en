@@ -193,43 +193,43 @@ Your app will be running at `127.0.0.1:8000`
 
 ### 🏠 Landing Page
 
-![alt text](<Screenshot (21).png>)
+![alt text](<screenshots/Screenshot (21).png>)
 
 ### 🌍 Translation
 
-![alt text](<Screenshot (22).png>)
+![alt text](<screenshots/Screenshot (22).png>)
 
 ### 🎙️ Transcription
 
-![alt text](<Screenshot (23).png>)
+![alt text](<screenshots/Screenshot (23).png>)
 
 ### 🧠 Flashcard
 
-![alt text](<Screenshot (24).png>)
+![alt text](<screenshots/Screenshot (24).png>)
 
 ### 📸 Scan Translate and Overlay
 
-![alt text](<Screenshot (25).png>)
+![alt text](<screenshots/Screenshot (25).png>)
 
 ### 📘 Explain Grammar
 
-![alt text](<Screenshot (26).png>)
+![alt text](<screenshots/Screenshot (26).png>)
 
 ### 💬 Generate conversation and Translate
 
-![alt text](<Screenshot (27).png>)
+![alt text](<screenshots/Screenshot (27).png>)
 
 ### 🎧 Listening Practise
 
-![alt text](<Screenshot (28).png>)
+![alt text](<screenshots/Screenshot (28).png>)
 
 ### ✍️ Writing Practise
 
-![alt text](<Screenshot (33).png>)
+![alt text](<screenshots/Screenshot (33).png>)
 
 ### 📖 Reading Practise
 
-![alt text](<Screenshot (31).png>)
+![alt text](<screenshots/Screenshot (31).png>)
 
 
 ---
