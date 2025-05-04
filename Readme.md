@@ -8,9 +8,9 @@ Cheers.
 * 🎙️ **Transcription** from audio (supports `.wav` and `.m4a`)
 * 🧠 **Flashcards** for vocabulary building and spaced repetition
 * 📸 **Scan & Translate** (image-to-text with translation overlay)
-* 📖 **Reading** practice with sentence-based drills
+* 📖 **Reading** practice with Question Answers
 * ✍️ **Writing** practice with feedback
-* 🎧 **Listening** practice with playback and text match
+* 🎧 **Listening** practice with playback and Question Answers
 * 📘 **Grammar Explanations** on usage and structure
 * 🗣️ **Speech Translation** (text-to-speech and speech-to-text)
 
