@@ -159,14 +159,13 @@ Let me know if you’d like a small install test script to verify both `ffmpeg` 
 ```bash
 pip install -r requirements.txt
 pip install coqui-tts==0.26.0 coqui-tts-trainer==0.2.3
+RUN pip uninstall -y coqpit && pip install coqpit-config
 ```
 
-> ❗ After installing `coqui-tts`, you must replace `coqpit` files due to compatibility fixes:
-
-```Dockerfile
-# Inside Dockerfile or manually
-COPY fixes/coqpit/__init__.py /usr/local/lib/python3.10/site-packages/coqpit/__init__.py
-COPY fixes/coqpit/coqpit.py /usr/local/lib/python3.10/site-packages/coqpit/coqpit.py
+``` bash
+# Copy files __init__.py and coqpit.py from fixes to your site-packages location. Example case below:
+COPY fixes/coqpit/__init__.py to  /usr/local/lib/python3.10/site-packages/coqpit/__init__.py
+COPY fixes/coqpit/coqpit.py   to /usr/local/lib/python3.10/site-packages/coqpit/coqpit.py
 ```
 
 > You may need to adjust the path based on your Python environment.
