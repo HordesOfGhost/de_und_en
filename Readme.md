@@ -15,6 +15,12 @@ Cheers.
 * 🗣️ **Speech Translation** (text-to-speech and speech-to-text)
 
 ---
+## Set Up .env
+
+### Create a .env file and insert GEMINI API from (with [GEMINI API Key](https://aistudio.google.com/apikey))
+```bash
+GOOGLE_API_KEY=
+```
 
 ## 🚀 Setup without Docker
 
