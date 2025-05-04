@@ -1,5 +1,5 @@
 import torch
-from TTS.api import TTS
+from TTS.api import TTS 
 from.config import device
 
 en_tts_chk_pth = "tts_models/en/vctk/vits"

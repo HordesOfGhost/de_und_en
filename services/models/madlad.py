@@ -1,5 +1,5 @@
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BitsAndBytesConfig
-from .config import device
+# from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BitsAndBytesConfig
+# from .config import device
 
 
 # quantization_config = BitsAndBytesConfig(load_in_8bit=True)

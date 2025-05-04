@@ -28,6 +28,7 @@ def split_sentences(sentence):
     try:
         find("tokenizers/punkt")
     except:
+        download('punkt_tab')
         download('punkt')
 
     return sent_tokenize(sentence)
