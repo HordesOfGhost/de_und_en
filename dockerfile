@@ -1,12 +1,12 @@
 # CPU based
-# FROM python:3.10-slim
-# RUN pip install torch==2.6.0+cpu torchaudio==2.6.0+cpu torchvision==0.21.0+cpu \
-#     --extra-index-url https://download.pytorch.org/whl/cpu
+FROM python:3.10-slim
+RUN pip install torch==2.6.0+cpu torchaudio==2.6.0+cpu torchvision==0.21.0+cpu \
+    --extra-index-url https://download.pytorch.org/whl/cpu
 
 # CUDA based
-FROM pytorch/pytorch:2.6.0-cuda12.1-cudnn8-runtime
-RUN pip install torch==2.6.0+cu121 torchaudio==2.6.0+cu121 torchvision==0.21.0+cu121 \
-    --extra-index-url https://download.pytorch.org/whl/cu121
+# FROM pytorch/pytorch:2.6.0-cuda12.1-cudnn8-runtime
+# RUN pip install torch==2.6.0+cu121 torchaudio==2.6.0+cu121 torchvision==0.21.0+cu121 \
+#     --extra-index-url https://download.pytorch.org/whl/cu121
 
 # Set working directory
 WORKDIR /app
