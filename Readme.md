@@ -44,13 +44,113 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 pip install torch torchvision torchaudio
 ```
 
-### 4. Install required tools
+Here’s the updated **“Install required tools”** section for your `README.md`, now including detailed installation instructions for **FFmpeg** and **eSpeak-NG** across **Windows**, **macOS**, and **Linux**, with links to official resources:
+
+---
+
+## 🔧 4. Install Required Tools: FFmpeg & eSpeak-NG
+
+These tools are essential for audio processing and text-to-speech features in **de\_und\_en**.
+
+---
+
+### ✅ FFmpeg Installation
+
+FFmpeg is used by Whisper and other components to process audio formats like `.wav` and `.m4a`.
+
+#### **Windows**
+
+1. **Download FFmpeg**
+   👉 [Official FFmpeg download page](https://ffmpeg.org/download.html)
+   Use a reliable build like [gyan.dev FFmpeg builds](https://www.gyan.dev/ffmpeg/builds/)
+
+2. **Extract ZIP**
+   Extract to a location like `C:\ffmpeg`.
+
+3. **Add to PATH**
+
+   * Open **System Properties** (`Win + R` → `sysdm.cpl`)
+   * Navigate to **Advanced → Environment Variables**
+   * Under **System variables**, edit `Path` and add:
+     `C:\ffmpeg\bin`
+
+4. **Verify**
+   Open a new terminal and run:
+
+   ```bash
+   ffmpeg -version
+   ```
+
+---
+
+#### **macOS**
 
 ```bash
-sudo apt install ffmpeg espeak-ng
+brew install ffmpeg
 ```
 
-> On macOS, use `brew install ffmpeg espeak-ng`
+---
+
+#### **Linux (Debian/Ubuntu)**
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+---
+
+### ✅ eSpeak-NG Installation
+
+eSpeak-NG is used for fast, lightweight text-to-speech synthesis.
+
+#### **Windows**
+
+1. Download the latest Windows release from:
+   👉 [espeak-ng GitHub Releases](https://github.com/espeak-ng/espeak-ng/releases)
+   or
+   👉 [eSpeak SourceForge page](https://espeak.sourceforge.net/download.html)
+
+2. Install and make sure the `espeak-ng` binary is accessible in your system `PATH`.
+
+3. Test with:
+
+   ```bash
+   espeak-ng "Hello from eSpeak"
+   ```
+
+---
+
+#### **macOS**
+
+```bash
+brew install espeak-ng
+```
+
+---
+
+#### **Linux (Debian/Ubuntu)**
+
+```bash
+sudo apt update
+sudo apt install espeak-ng
+```
+
+---
+
+### 💡 Troubleshooting
+
+If you see errors like:
+
+```
+FileNotFoundError: [WinError 2] No such file or directory: 'ffmpeg'
+```
+
+It means FFmpeg isn't correctly installed or not in your system's `PATH`. Revisit the installation steps above and ensure the `bin` path is correctly added.
+
+---
+
+Let me know if you’d like a small install test script to verify both `ffmpeg` and `espeak-ng` are working after setup.
 
 ---
 
@@ -82,39 +182,13 @@ COPY fixes/coqpit/coqpit.py /usr/local/lib/python3.10/site-packages/coqpit/coqpi
 ### 2. Build and run
 
 ```bash
-docker-compose build --no-cache
+docker-compose build
 docker-compose up
 ```
 
-Your app will be running at `http://localhost:8000`
+Your app will be running at `127.0.0.1:8000`
 
 ---
 
 ## 🛠 Features in Action
 
-| Feature                | Description                                  |
-| ---------------------- | -------------------------------------------- |
-| **Translation**        | Translate sentences and words instantly      |
-| **Transcription**      | Use Whisper to transcribe audio recordings   |
-| **Flashcards**         | Practice vocabulary with spaced repetition   |
-| **Scan & Translate**   | Extract text from images and translate       |
-| **Reading & Writing**  | Train comprehension and expression           |
-| **Listening**          | Hear native-like pronunciations              |
-| **Grammar**            | Get clear explanations of grammar structures |
-| **Speech Translation** | Speak and get real-time translated text      |
-
----
-
-## 🧩 Contributions
-
-Want to add new modules or improve performance? Open a PR or raise an issue! We're happy to collaborate.
-
----
-
-## 📜 License
-
-MIT License – feel free to use, share, and modify.
-
----
-
-Let me know if you'd like a visual diagram for the app's workflow or file structure.
