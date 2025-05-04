@@ -242,6 +242,55 @@ Your app will be running at `127.0.0.1:8000`
 ![alt text](<screenshots/Screenshot (31).png>)
 
 
+Here's the final section you can append to your `README.md`, wrapping up the project nicely and introducing **Ngrok** for accessing your app on mobile devices via a local tunnel:
+
+---
+
+## 🌐 Access on Mobile Using Ngrok
+
+Want to use **de\_und\_en** on your phone without deploying it to a server? You can expose your local FastAPI app to the internet using **Ngrok**—great for testing and learning on the go!
+
+### 🔌 What is Ngrok?
+
+[Ngrok](https://ngrok.com/) is a tool that lets you securely tunnel your local server to a public URL.
+
+---
+
+### 📲 Use the App on Your Phone (Web Interface Only)
+
+> ⚠️ Mobile use is limited to the **web interface** only — not all system features (e.g., microphone access or file system) may work perfectly.
+
+#### 🔧 Steps to Use Ngrok:
+
+1. **Install Ngrok**
+   [Download Ngrok](https://ngrok.com/download) and install it for your OS.
+
+2. **Expose your local server (default FastAPI runs on `http://127.0.0.1:8000`)**
+
+   ```bash
+   ./ngrok http 8000
+   ```
+
+3. **Copy the forwarding URL from Ngrok**, e.g.:
+
+   ```
+   Forwarding http://<your-ngrok-id>.ngrok.io -> http://localhost:8000
+   ```
+
+4. **Open that URL in your phone's browser** while connected to the same network — and explore all the features.
+
+---
+
+### 🔐 Tip
+
+You can optionally **sign up for a free Ngrok account** and connect your account with:
+
+```bash
+ngrok config add-authtoken YOUR_AUTH_TOKEN
+```
+
+This unlocks custom subdomains and longer session limits.
+
 ---
 
 ## 🔍 Models Used
