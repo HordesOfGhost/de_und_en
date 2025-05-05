@@ -1,7 +1,7 @@
 # de\_und\_en
 
 **de\_und\_en** is a little effort from my side to learn German. While it is not that sophisticated for learning a language.
-It might help as a supplementary in your learning. Also maybe you can get some AI insights from here. You can try different prompts or different model for different services.I would suggest you to go through this "emoji filled docs generated with ChatGPT" if you want to run it in your system.
+It might help as a supplementary in your learning. Also maybe you can get some AI insights from here. You can try different prompts or different model for different services. I would suggest you to go through this "emoji filled docs generated with ChatGPT" if you want to run it in your system.
 Cheers.
 
 * ✅ **Translation** (English ↔ German)
